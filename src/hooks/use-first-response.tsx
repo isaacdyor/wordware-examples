@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { type ConversationWithMessages } from "@/types/conversations";
 import { useEffect } from "react";
 import { useStream } from "./use-stream";
@@ -7,6 +9,7 @@ export function useFirstResponse(
   conversation: ConversationWithMessages | undefined | null,
 ) {
   const utils = api.useUtils();
+  const [invalidated, setInvalidated] = useState(false);
 
   const { fetchStream, streamedContent, isCompleted } = useStream(
     "4cfc2a23-2a4e-4038-a452-ac74c1faaa82",
@@ -18,6 +21,7 @@ export function useFirstResponse(
   const { mutate } = api.conversations.addMessage.useMutation({
     onSuccess: async () => {
       await utils.conversations.getById.invalidate();
+      setInvalidated(true);
     },
   });
 
@@ -50,5 +54,5 @@ export function useFirstResponse(
     }
   }, [conversation?.id, isCompleted, mutate, streamedContent]);
 
-  return { streamedContent, isCompleted };
+  return { streamedContent, invalidated };
 }

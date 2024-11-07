@@ -1,17 +1,20 @@
 import { env } from "@/env";
 import { type NextRequest, NextResponse } from "next/server";
 
-interface RouteParams {
-  params: { appSlug: Promise<string> };
-}
-
-export async function POST(request: NextRequest, { params }: RouteParams) {
+export async function POST(
+  request: NextRequest,
+  {
+    params,
+  }: {
+    params: Promise<{ appSlug: string }>;
+  },
+) {
   try {
-    const appSlug = await params.appSlug;
+    const appSlug = (await params).appSlug;
     const WORDWARE_API_URL = `https://api.wordware.ai/v1alpha/apps/isaac-dyor-d74b42/${appSlug}/latest/runs/stream`;
 
     const body = (await request.json()) as unknown;
-    const { inputs } = body;
+    const { inputs } = body as { inputs: Record<string, unknown> };
 
     const response = await fetch(WORDWARE_API_URL, {
       method: "POST",

@@ -1,7 +1,7 @@
 "use client";
 
 import { signup } from "@/actions/auth";
-import { AuthForm, AuthInput } from "@/components/auth-form";
+import { AuthForm, type AuthInput } from "@/components/auth-form";
 import Link from "next/link";
 import { toast } from "sonner";
 

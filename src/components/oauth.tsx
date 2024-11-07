@@ -5,7 +5,7 @@ import { env } from "@/env";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import type { Provider } from "@supabase/supabase-js";
-import { LucideProps } from "lucide-react";
+import { type LucideProps } from "lucide-react";
 import React from "react";
 
 const providers = [
@@ -41,10 +41,10 @@ export const OAuthProviders: React.FC = () => {
           <Button
             key={provider.name}
             variant="outline"
-            className="mb-2 w-full font-normal text-muted-foreground group"
+            className="group mb-2 w-full font-normal text-muted-foreground"
             onClick={() => handleLogin(provider.name as Provider)}
           >
-            <div className="flex items-center gap-2 group">
+            <div className="group flex items-center gap-2">
               {provider.logo({
                 className: "group-hover:fill-primary size-5",
               })}

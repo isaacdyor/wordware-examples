@@ -27,7 +27,7 @@ export function NewChatInput() {
   const router = useRouter();
 
   const { mutate } = api.conversations.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: (data: { id: string }) => {
       router.push(`/chat/${data.id}`);
     },
   });

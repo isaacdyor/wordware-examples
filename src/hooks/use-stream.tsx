@@ -49,6 +49,7 @@ export function useStream(appSlug: string, inputs: Record<string, unknown>) {
             if (parsedData.type === "chunk") {
               const newContent = (parsedData.content as string) || "";
               setStreamedContent((prev) => prev + newContent);
+              console.log(newContent);
             }
           } catch {
             //
