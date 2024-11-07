@@ -1,5 +1,4 @@
-import { api } from "@/trpc/react";
-("use client");
+"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -13,6 +12,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
 
 const FormSchema = z.object({
   message: z.string().min(1),
@@ -23,10 +24,36 @@ export function NewChatInput() {
     resolver: zodResolver(FormSchema),
   });
 
-  const { mutate } = api.conversations.create.useMutation();
+  const router = useRouter();
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    mutate({ userId: "unnecessary" });
+  const { mutate } = api.conversations.create.useMutation({
+    onSuccess: (data) => {
+      router.push(`/chat/${data.id}`);
+    },
+  });
+
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    // mutate({ conversation: { userId: "unnecessary" }, message: data.message });
+    const response = await fetch(
+      "/api/stream/4cfc2a23-2a4e-4038-a452-ac74c1faaa82",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          inputs: {
+            message: data.message,
+          },
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    console.log(response);
   };
 
   const handleKeyDown = async (e: React.KeyboardEvent) => {

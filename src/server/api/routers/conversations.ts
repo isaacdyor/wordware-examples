@@ -18,7 +18,7 @@ export const conversationsRouter = createTRPCRouter({
           messages: {
             create: {
               content: input.message,
-              role: "assistant",
+              role: "USER",
             },
           },
         },
