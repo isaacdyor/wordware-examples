@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 export function useStream(appSlug: string, inputs: Record<string, unknown>) {
   const [streamedContent, setStreamedContent] = useState("");
+  const [isCompleted, setIsCompleted] = useState(false);
 
-  const fetchStream = async () => {
+  const fetchStream = useCallback(async () => {
     try {
       const response = await fetch(`/api/stream/${appSlug}`, {
         method: "POST",
@@ -24,7 +25,10 @@ export function useStream(appSlug: string, inputs: Record<string, unknown>) {
 
       while (true) {
         const { value, done } = await reader.read();
-        if (done) break;
+        if (done) {
+          setIsCompleted(true);
+          break;
+        }
 
         const chunk = new TextDecoder().decode(value);
         currentData += chunk;
@@ -45,7 +49,6 @@ export function useStream(appSlug: string, inputs: Record<string, unknown>) {
             if (parsedData.type === "chunk") {
               const newContent = (parsedData.content as string) || "";
               setStreamedContent((prev) => prev + newContent);
-              console.log(newContent);
             }
           } catch {
             //
@@ -55,7 +58,7 @@ export function useStream(appSlug: string, inputs: Record<string, unknown>) {
     } catch (error) {
       console.error("Failed to generate AI response:", error);
     }
-  };
+  }, [appSlug, inputs]);
 
-  return { fetchStream, streamedContent };
+  return { fetchStream, streamedContent, isCompleted };
 }

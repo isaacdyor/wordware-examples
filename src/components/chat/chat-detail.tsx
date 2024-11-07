@@ -10,7 +10,16 @@ export function ChatDetail() {
     id: params.id as string,
   });
 
-  const { streamedContent } = useFirstResponse(conversation);
+  const { streamedContent, isCompleted } = useFirstResponse(conversation);
 
-  return <div>{streamedContent}</div>;
+  console.log(isCompleted);
+
+  return (
+    <div className="flex flex-col gap-4">
+      {conversation?.messages.map((message) => (
+        <div key={message.id}>{message.content}</div>
+      ))}
+      {!isCompleted && streamedContent}
+    </div>
+  );
 }
