@@ -24,4 +24,15 @@ export const conversationsRouter = createTRPCRouter({
         },
       });
     }),
+
+  getById: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.db.conversation.findUnique({
+        where: { id: input.id },
+        include: {
+          messages: true,
+        },
+      });
+    }),
 });

@@ -33,27 +33,7 @@ export function NewChatInput() {
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    // mutate({ conversation: { userId: "unnecessary" }, message: data.message });
-    const response = await fetch(
-      "/api/stream/4cfc2a23-2a4e-4038-a452-ac74c1faaa82",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          inputs: {
-            message: data.message,
-          },
-        }),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    console.log(response);
+    mutate({ conversation: { userId: "unnecessary" }, message: data.message });
   };
 
   const handleKeyDown = async (e: React.KeyboardEvent) => {
