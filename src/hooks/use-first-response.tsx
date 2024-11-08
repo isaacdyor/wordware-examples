@@ -11,12 +11,7 @@ export function useFirstResponse(
   const utils = api.useUtils();
   const [invalidated, setInvalidated] = useState(false);
 
-  const { fetchStream, streamedContent, isCompleted } = useStream(
-    "4cfc2a23-2a4e-4038-a452-ac74c1faaa82",
-    {
-      message: conversation?.messages[0]?.content,
-    },
-  );
+  const { fetchStream, streamedContent, isCompleted } = useStream();
 
   const { mutate } = api.conversations.addMessage.useMutation({
     onSuccess: async () => {
@@ -34,7 +29,9 @@ export function useFirstResponse(
       !isCompleted;
 
     if (shouldTriggerAIResponse) {
-      void fetchStream();
+      void fetchStream("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
+        message: conversation?.messages[0]?.content,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversation, isCompleted]);
@@ -42,7 +39,6 @@ export function useFirstResponse(
   useEffect(() => {
     if (isCompleted) {
       mutate({
-        id: conversation?.id,
         content: streamedContent,
         role: "ASSISTANT",
         conversation: {

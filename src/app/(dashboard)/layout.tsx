@@ -18,7 +18,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = async ({
           <div className="sticky top-0 z-20 w-full bg-background">
             <SidebarTrigger className="ml-2 mt-2 size-4 bg-background" />
           </div>
-          <div className="p-4">{children}</div>
+          <div className="h-full p-4 pt-0">{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </UserProvider>

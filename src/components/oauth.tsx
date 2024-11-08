@@ -26,7 +26,7 @@ export const OAuthProviders: React.FC = () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: provider,
       options: {
-        redirectTo: `${env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/dashboard`,
+        redirectTo: `${env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/chat`,
       },
     });
     if (error) {
