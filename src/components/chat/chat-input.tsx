@@ -6,7 +6,6 @@ import { z } from "zod";
 
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { useStream } from "@/hooks/use-stream";
 import { api } from "@/trpc/react";
 import { type Conversation } from "@prisma/client";
 
@@ -14,51 +13,50 @@ const FormSchema = z.object({
   message: z.string().min(1),
 });
 
-export function ChatInput({ conversation }: { conversation: Conversation }) {
+export function ChatInput({
+  conversation,
+  fetchStream,
+}: {
+  conversation: Conversation;
+  fetchStream: (id: string, data: { message: string }) => Promise<void>;
+}) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
   const utils = api.useUtils();
 
-  const { fetchStream } = useStream();
-
   const { mutate } = api.conversations.addMessage.useMutation({
     async onMutate(newPost) {
-      // Cancel outgoing fetches (so they don't overwrite our optimistic update)
       await utils.conversations.getById.cancel();
 
-      // Get the data from the queryCache
       const prevData = utils.conversations.getById.getData();
 
-      // Optimistically update the data with our new post
-      utils.conversations.getById.setData(
-        { id: conversation.id },
-        (old) =>
-          old && {
-            ...old,
-            messages: [
-              ...old.messages,
-              {
-                id: crypto.randomUUID(),
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                content: newPost.content,
-                role: newPost.role,
-                conversationId: conversation.id,
-              },
-            ],
-          },
-      );
+      utils.conversations.getById.setData({ id: conversation.id }, (old) => {
+        if (!old) return old;
 
-      // Return the previous data so we can revert if something goes wrong
+        const newMessage = {
+          id: crypto.randomUUID(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          content: newPost.content,
+          role: newPost.role,
+          conversationId: conversation.id,
+        };
+
+        return {
+          ...old,
+          messages: [...old.messages, newMessage],
+        };
+      });
+
       return { prevData };
     },
     onSuccess: async (data: { content: string }) => {
       void utils.conversations.invalidate();
-      // await fetchStream("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
-      //   message: data.content,
-      // });
+      await fetchStream("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
+        message: data.content,
+      });
     },
   });
 
@@ -66,7 +64,7 @@ export function ChatInput({ conversation }: { conversation: Conversation }) {
     form.reset({ message: "" });
     mutate({
       content: data.message,
-      role: "ASSISTANT",
+      role: "USER",
       conversation: {
         connect: {
           id: conversation?.id,
