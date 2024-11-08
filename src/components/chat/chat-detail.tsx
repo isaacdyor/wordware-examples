@@ -31,10 +31,12 @@ export function ChatDetail() {
 
   useEffect(() => {
     if (conversation?.messages.length === 1) {
-      setIsLoading(true);
       void fetchStream("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
         message: conversation?.messages[0]?.content,
       });
+      setTimeout(() => {
+        setIsLoading(true);
+      }, 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -42,9 +44,9 @@ export function ChatDetail() {
   if (!conversation || conversation.messages.length === 0) redirect("/chat");
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-56px)] w-full max-w-2xl flex-col justify-between gap-4 lg:max-w-3xl">
+    <div className="flex h-[calc(100vh-56px)] flex-col justify-between gap-4">
       <div className="no-scrollbar flex flex-col-reverse overflow-auto pb-4">
-        <div className="flex flex-col gap-2">
+        <div className="mx-auto flex w-full max-w-2xl flex-col gap-2 lg:max-w-3xl">
           {conversation.messages.map((message) =>
             message.role === "USER" ? (
               <div key={message.id} className="flex items-start gap-2 pl-10">

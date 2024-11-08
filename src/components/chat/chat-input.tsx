@@ -64,7 +64,9 @@ export function ChatInput({
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(true);
+    }, 400);
     form.reset({ message: "" });
     mutate({
       content: data.message,
@@ -88,7 +90,7 @@ export function ChatInput({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex w-full justify-center"
+        className="mx-auto flex w-full max-w-2xl justify-center px-6 lg:max-w-3xl"
       >
         <FormField
           control={form.control}
