@@ -10,23 +10,18 @@ export function useChat({
 }) {
   const utils = api.useUtils();
 
-  const {
-    fetchStream,
-    streamedContent,
-    setStreamedContent,
-    isCompleted,
-    isLoading,
-  } = useStream();
+  const { fetchStream, streamedContent, setStreamedContent, isCompleted } =
+    useStream();
 
   const { mutate } = api.conversations.addMessage.useMutation({
     onSuccess: async () => {
       await utils.conversations.getById.invalidate();
-      setStreamedContent(null);
+      setStreamedContent("");
     },
   });
 
   useEffect(() => {
-    if (isCompleted && streamedContent) {
+    if (isCompleted && streamedContent !== "") {
       mutate({
         content: streamedContent,
         role: "ASSISTANT",
@@ -40,5 +35,5 @@ export function useChat({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCompleted]);
 
-  return { fetchStream, streamedContent, isLoading };
+  return { fetchStream, streamedContent };
 }

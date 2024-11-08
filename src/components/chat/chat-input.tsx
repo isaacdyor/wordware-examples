@@ -16,9 +16,11 @@ const FormSchema = z.object({
 export function ChatInput({
   conversation,
   fetchStream,
+  setIsLoading,
 }: {
   conversation: Conversation;
   fetchStream: (id: string, data: { message: string }) => Promise<void>;
+  setIsLoading: (isLoading: boolean) => void;
 }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -57,10 +59,12 @@ export function ChatInput({
       await fetchStream("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
         message: data.content,
       });
+      setIsLoading(false);
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    setIsLoading(true);
     form.reset({ message: "" });
     mutate({
       content: data.message,

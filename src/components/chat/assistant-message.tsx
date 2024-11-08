@@ -2,23 +2,24 @@
 
 import { motion } from "framer-motion";
 import { Bot } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 export function AssistantMessage({
   message,
   isLoading,
 }: {
-  message: string | null;
+  message: string;
   isLoading?: boolean;
 }) {
-  if (!message && !isLoading) return null;
+  if (message === "" && !isLoading) return null;
 
   return (
-    <div className="flex items-start gap-2">
+    <div className="flex items-start gap-2 pr-10">
       <div className="rounded-full bg-muted p-1.5">
         <Bot className="size-5 text-muted-foreground" />
       </div>
       <div className="rounded-md bg-secondary px-3 py-2 text-secondary-foreground">
-        {isLoading ? (
+        {isLoading && message === "" ? (
           <div className="flex h-4 items-center space-x-2 px-1">
             {[0, 1, 2].map((index) => (
               <motion.div
@@ -37,7 +38,9 @@ export function AssistantMessage({
             ))}
           </div>
         ) : (
-          <p className="break-words">{message}</p>
+          <ReactMarkdown className="prose dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 break-words">
+            {message ?? ""}
+          </ReactMarkdown>
         )}
       </div>
     </div>

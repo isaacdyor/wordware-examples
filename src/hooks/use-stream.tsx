@@ -1,14 +1,12 @@
 import { useState, useCallback } from "react";
 
 export function useStream() {
-  const [streamedContent, setStreamedContent] = useState<string | null>(null);
+  const [streamedContent, setStreamedContent] = useState<string>("");
   const [isCompleted, setIsCompleted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const fetchStream = useCallback(
     async (appSlug: string, inputs: Record<string, unknown>) => {
       try {
-        setIsLoading(true);
         const response = await fetch(`/api/stream/${appSlug}`, {
           method: "POST",
           headers: {
@@ -52,7 +50,6 @@ export function useStream() {
               if (parsedData.type === "chunk") {
                 const newContent = (parsedData.content as string) || "";
                 setStreamedContent((prev) => prev + newContent);
-                console.log(newContent);
               }
             } catch (error) {
               console.error("Failed to parse stream data:", error);
@@ -61,8 +58,6 @@ export function useStream() {
         }
       } catch (error) {
         console.error("Failed to generate AI response:", error);
-      } finally {
-        setIsLoading(false);
       }
     },
     [],
@@ -73,6 +68,5 @@ export function useStream() {
     streamedContent,
     setStreamedContent,
     isCompleted,
-    isLoading,
   };
 }

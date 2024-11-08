@@ -42,7 +42,11 @@ export const conversationsRouter = createTRPCRouter({
       return ctx.db.conversation.findUnique({
         where: { id: input.id },
         include: {
-          messages: true,
+          messages: {
+            orderBy: {
+              createdAt: "asc",
+            },
+          },
         },
       });
     }),
