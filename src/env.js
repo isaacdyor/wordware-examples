@@ -12,6 +12,7 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     WORDWARE_API_KEY: z.string(),
+    BLOB_READ_WRITE_TOKEN: z.string(),
   },
 
   /**
@@ -33,6 +34,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     WORDWARE_API_KEY: process.env.WORDWARE_API_KEY,
+    BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,

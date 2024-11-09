@@ -1,7 +1,7 @@
 "use client";
 
 import { signin } from "@/actions/auth";
-import { AuthForm, type AuthInput } from "@/components/auth-form";
+import { AuthForm, type AuthInput } from "@/components/auth/auth-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -25,7 +25,7 @@ export default function Signup() {
       Link={
         <Link
           href="/signup"
-          className="text-muted-foreground flex w-full items-center justify-center pt-4 text-sm underline"
+          className="flex w-full items-center justify-center pt-4 text-sm text-muted-foreground underline"
         >
           Don&apos;t have an account? Sign up
         </Link>

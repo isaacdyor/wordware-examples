@@ -5,6 +5,10 @@
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  images: {
+    domains: ["nnboofnlro4su4lg.public.blob.vercel-storage.com"],
+  },
+};
 
 export default config;
