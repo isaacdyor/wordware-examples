@@ -1,20 +1,19 @@
 "use client";
 
 import { useChat } from "@/hooks/use-chat";
+import { useChatContext } from "@/hooks/use-chat-context";
 import { api } from "@/trpc/react";
 import { User } from "lucide-react";
 import { redirect, useParams } from "next/navigation";
-import { useEffect, useRef, useState, DragEvent } from "react";
+import { DragEvent, useEffect, useRef, useState } from "react";
 import { AssistantMessage } from "./assistant-message";
 import { ChatInput } from "./chat-input";
 
 export function ChatDetail() {
   const params = useParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const dragCounter = useRef(0);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
+  const { isDragging, setIsDragging, countRef, isLoading, setIsLoading } =
+    useChatContext();
 
   const { data: conversation } = api.conversations.getById.useQuery({
     id: params.id as string,
@@ -43,15 +42,11 @@ export function ChatDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    console.log(dragCounter.current);
-  }, [dragCounter.current]);
-
   const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    dragCounter.current++;
-    if (dragCounter.current === 1) {
+    countRef.current++;
+    if (countRef.current === 1) {
       setIsDragging(true);
     }
   };
@@ -59,8 +54,8 @@ export function ChatDetail() {
   const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    dragCounter.current--;
-    if (dragCounter.current === 0) {
+    countRef.current--;
+    if (countRef.current === 0) {
       setIsDragging(false);
     }
   };
@@ -68,7 +63,7 @@ export function ChatDetail() {
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    dragCounter.current = 0;
+    countRef.current = 0;
     setIsDragging(false);
   };
 
@@ -102,13 +97,7 @@ export function ChatDetail() {
         </div>
       </div>
 
-      <ChatInput
-        conversation={conversation}
-        fetchStream={fetchStream}
-        setIsLoading={setIsLoading}
-        isDragging={isDragging}
-        dragCounter={dragCounter}
-      />
+      <ChatInput conversation={conversation} fetchStream={fetchStream} />
     </div>
   );
 }

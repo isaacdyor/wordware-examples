@@ -11,6 +11,7 @@ import { type Conversation } from "@prisma/client";
 import { ChatFileUpload } from "./chat-file-upload";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useChatContext } from "@/hooks/use-chat-context";
 
 const FormSchema = z.object({
   message: z.string().min(1),
@@ -19,20 +20,15 @@ const FormSchema = z.object({
 export function ChatInput({
   conversation,
   fetchStream,
-  setIsLoading,
-  isDragging,
-  dragCounter,
 }: {
   conversation: Conversation;
   fetchStream: (id: string, data: { message: string }) => Promise<void>;
-  setIsLoading: (isLoading: boolean) => void;
-  isDragging: boolean;
-  dragCounter: React.MutableRefObject<number>;
 }) {
-  const [isFileInputOpen, setIsFileInputOpen] = useState(true);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
+
+  const { isDragging, setIsLoading } = useChatContext();
 
   const utils = api.useUtils();
 
@@ -96,9 +92,7 @@ export function ChatInput({
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col rounded-lg border border-b-0 lg:max-w-3xl">
-      {isDragging && (
-        <ChatFileUpload isDragging={isDragging} dragCounter={dragCounter} />
-      )}
+      {isDragging && <ChatFileUpload />}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -116,7 +110,7 @@ export function ChatInput({
                     maxHeight={150}
                     className={cn(
                       "w-full resize-none",
-                      isFileInputOpen && "border-x-0",
+                      isDragging && "border-x-0",
                     )}
                     onKeyDown={handleKeyDown}
                     autoFocus

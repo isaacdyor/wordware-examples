@@ -1,3 +1,4 @@
+import { useChatContext } from "@/hooks/use-chat-context";
 import { cn } from "@/lib/utils";
 import { PutBlobResult } from "@vercel/blob";
 import { CloudUpload, Loader2, X } from "lucide-react";
@@ -5,16 +6,11 @@ import { ChangeEvent, useCallback, useRef, useState } from "react";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
-export function ChatFileUpload({
-  isDragging,
-  dragCounter: parentDragCounter,
-}: {
-  isDragging: boolean;
-  dragCounter: React.MutableRefObject<number>;
-}) {
+export function ChatFileUpload() {
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
   const localDragCounter = useRef(0);
+  const { countRef, setIsDragging } = useChatContext();
 
   const handleImageUrl = useCallback((url: string) => {
     console.log(url);
@@ -78,14 +74,14 @@ export function ChatFileUpload({
                 e.preventDefault();
                 e.stopPropagation();
                 localDragCounter.current++;
-                parentDragCounter.current++;
+                countRef.current++;
                 setDragActive(true);
               }}
               onDragLeave={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 localDragCounter.current--;
-                parentDragCounter.current--;
+                countRef.current--;
                 if (localDragCounter.current === 0) {
                   setDragActive(false);
                 }
@@ -94,7 +90,7 @@ export function ChatFileUpload({
                 e.preventDefault();
                 e.stopPropagation();
                 localDragCounter.current = 0;
-                parentDragCounter.current = 0;
+                countRef.current = 0;
                 setDragActive(false);
                 const file = e.dataTransfer.files?.[0] ?? null;
                 await handleUpload(file);
@@ -134,8 +130,8 @@ export function ChatFileUpload({
           disabled={uploading}
         />
       </div>
-      <div className="absolute -right-0 -top-0 z-10 cursor-pointer rounded-full border bg-background text-muted-foreground hover:bg-accent">
-        <X className="size-4" onClick={() => setDragActive(false)} />
+      <div className="absolute right-1 top-1 z-10 cursor-pointer rounded-full p-1 text-muted-foreground hover:bg-accent">
+        <X className="size-4" onClick={() => setIsDragging(false)} />
       </div>
     </div>
   );

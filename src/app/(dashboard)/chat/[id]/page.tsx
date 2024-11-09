@@ -1,3 +1,4 @@
+import { ChatProvider } from "@/providers/chat-provider";
 import { ChatDetail } from "@/components/chat/chat-detail";
 import { api, HydrateClient } from "@/trpc/server";
 
@@ -11,7 +12,9 @@ export default async function ChatPage({
 
   return (
     <HydrateClient>
-      <ChatDetail />
+      <ChatProvider>
+        <ChatDetail />
+      </ChatProvider>
     </HydrateClient>
   );
 }
