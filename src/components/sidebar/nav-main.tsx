@@ -1,6 +1,6 @@
 "use client";
 
-import { type LucideIcon } from "lucide-react";
+import { Bot, type LucideIcon } from "lucide-react";
 
 import {
   SidebarGroup,
@@ -10,27 +10,19 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { Conversation } from "@prisma/client";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
-  }[];
-}) {
+export function NavMain({ conversations }: { conversations: Conversation[] }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>Chats</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
-          <Link href={item.url} key={item.title}>
+        {conversations.map((conversation) => (
+          <Link href={`/chat/${conversation.id}`} key={conversation.id}>
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip={item.title}>
-                {item.icon && <item.icon />}
-                <span>{item.title}</span>
+              <SidebarMenuButton tooltip={conversation.id}>
+                <Bot />
+                <span>{conversation.id}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </Link>

@@ -50,4 +50,10 @@ export const conversationsRouter = createTRPCRouter({
         },
       });
     }),
+
+  getAll: privateProcedure.query(async ({ ctx, input }) => {
+    return ctx.db.conversation.findMany({
+      where: { userId: ctx.user.id },
+    });
+  }),
 });

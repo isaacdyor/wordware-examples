@@ -8,14 +8,12 @@ import {
   File,
   GalleryVerticalEnd,
   Image,
-  MessageCircle,
   Mic,
   Table,
   Upload,
 } from "lucide-react";
 import * as React from "react";
 
-import { NavMain } from "@/components/sidebar/nav-main";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import {
@@ -25,15 +23,12 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { Conversation } from "@prisma/client";
+import { NavMain } from "./nav-main";
 
 // This is sample data.
 const data = {
-  navMain: [
-    {
-      title: "Chat",
-      url: "/chat",
-      icon: MessageCircle,
-    },
+  examplesNav: [
     {
       title: "ReAct Agent",
       url: "/agent",
@@ -70,6 +65,7 @@ const data = {
       icon: Table,
     },
   ],
+
   teams: [
     {
       name: "Acme Inc",
@@ -89,14 +85,17 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  conversations,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & { conversations: Conversation[] }) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain conversations={conversations} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
