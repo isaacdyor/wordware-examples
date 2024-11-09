@@ -68,7 +68,7 @@ export function FileUpload({ type, handleImageUrl }: FileUploadProps) {
   );
 
   return (
-    <div className="h-full rounded-md border border-dashed border-border">
+    <div className="h-full">
       <label htmlFor="file-upload" className="cursor-pointer">
         <div className="relative flex h-full flex-col items-center justify-center">
           <div
@@ -98,7 +98,7 @@ export function FileUpload({ type, handleImageUrl }: FileUploadProps) {
           />
           <div
             className={cn(
-              "absolute z-[3] flex h-full w-full flex-col items-center justify-center rounded-md px-10 pb-10 transition-all",
+              "absolute z-[3] flex h-full w-full flex-col items-center justify-center rounded-md px-10 transition-all",
               dragActive && "border-2 border-primary",
               "bg-background opacity-100 hover:bg-accent",
             )}

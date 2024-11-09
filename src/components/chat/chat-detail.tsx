@@ -4,15 +4,17 @@ import { useChat } from "@/hooks/use-chat";
 import { api } from "@/trpc/react";
 import { User } from "lucide-react";
 import { redirect, useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, DragEvent } from "react";
 import { AssistantMessage } from "./assistant-message";
 import { ChatInput } from "./chat-input";
 
 export function ChatDetail() {
   const params = useParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const dragCounter = useRef(0);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const { data: conversation } = api.conversations.getById.useQuery({
     id: params.id as string,
@@ -41,10 +43,44 @@ export function ChatDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    console.log(dragCounter.current);
+  }, [dragCounter.current]);
+
+  const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter.current++;
+    if (dragCounter.current === 1) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter.current--;
+    if (dragCounter.current === 0) {
+      setIsDragging(false);
+    }
+  };
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter.current = 0;
+    setIsDragging(false);
+  };
+
   if (!conversation || conversation.messages.length === 0) redirect("/chat");
 
   return (
-    <div className="flex h-[calc(100vh-56px)] flex-col justify-between gap-4">
+    <div
+      className="relative flex h-[calc(100vh-56px)] flex-col justify-between gap-4"
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
       <div className="no-scrollbar flex flex-col-reverse overflow-auto pb-4">
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-2 lg:max-w-3xl">
           {conversation.messages.map((message) =>
@@ -70,6 +106,8 @@ export function ChatDetail() {
         conversation={conversation}
         fetchStream={fetchStream}
         setIsLoading={setIsLoading}
+        isDragging={isDragging}
+        dragCounter={dragCounter}
       />
     </div>
   );

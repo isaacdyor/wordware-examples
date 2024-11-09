@@ -8,6 +8,9 @@ import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { api } from "@/trpc/react";
 import { type Conversation } from "@prisma/client";
+import { ChatFileUpload } from "./chat-file-upload";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 const FormSchema = z.object({
   message: z.string().min(1),
@@ -17,11 +20,16 @@ export function ChatInput({
   conversation,
   fetchStream,
   setIsLoading,
+  isDragging,
+  dragCounter,
 }: {
   conversation: Conversation;
   fetchStream: (id: string, data: { message: string }) => Promise<void>;
   setIsLoading: (isLoading: boolean) => void;
+  isDragging: boolean;
+  dragCounter: React.MutableRefObject<number>;
 }) {
+  const [isFileInputOpen, setIsFileInputOpen] = useState(true);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -87,31 +95,39 @@ export function ChatInput({
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto flex w-full max-w-2xl justify-center px-6 lg:max-w-3xl"
-      >
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormControl>
-                <AutosizeTextarea
-                  placeholder="Ask me anything..."
-                  minHeight={36}
-                  maxHeight={150}
-                  className="w-full resize-none"
-                  onKeyDown={handleKeyDown}
-                  autoFocus
-                  {...field}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
+    <div className="mx-auto flex w-full max-w-2xl flex-col rounded-lg border border-b-0 lg:max-w-3xl">
+      {isDragging && (
+        <ChatFileUpload isDragging={isDragging} dragCounter={dragCounter} />
+      )}
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex justify-center"
+        >
+          <FormField
+            control={form.control}
+            name="message"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl>
+                  <AutosizeTextarea
+                    placeholder="Ask me anything..."
+                    minHeight={36}
+                    maxHeight={150}
+                    className={cn(
+                      "w-full resize-none",
+                      isFileInputOpen && "border-x-0",
+                    )}
+                    onKeyDown={handleKeyDown}
+                    autoFocus
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+    </div>
   );
 }
