@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { type EmailOtpType } from "@supabase/supabase-js";
+import { api } from "@/trpc/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -15,17 +16,16 @@ export async function GET(request: NextRequest) {
   if (code) {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error && data.user) {
-      const userData: { id: string; name?: string } = {
-        id: data.user.id,
-      };
+      const existingUser = await api.users.getCurrent();
 
-      if (
-        data.user.user_metadata &&
-        typeof data.user.user_metadata === "object" &&
-        "full_name" in data.user.user_metadata &&
-        typeof data.user.user_metadata.full_name === "string"
-      ) {
-        userData.name = data.user.user_metadata.full_name;
+      if (!existingUser) {
+        await api.users.create({
+          email: data.user.email,
+          userId: data.user.id,
+          name: data.user.user_metadata.full_name as string,
+          image: data.user.user_metadata.avatar_url as string,
+          activeSpaceId: "",
+        });
       }
 
       const forwardedHost = request.headers.get("x-forwarded-host");

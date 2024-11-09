@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, type LucideIcon } from "lucide-react";
+import { Bot } from "lucide-react";
 
 import {
   SidebarGroup,
@@ -9,10 +9,19 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { api } from "@/trpc/react";
 import Link from "next/link";
-import { Conversation } from "@prisma/client";
 
-export function NavMain({ conversations }: { conversations: Conversation[] }) {
+export function NavMain() {
+  return null;
+  const { data: space } = api.spaces.getCurrent.useQuery();
+
+  console.log(space);
+
+  if (!space) return null;
+
+  const conversations = space.conversations;
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Chats</SidebarGroupLabel>

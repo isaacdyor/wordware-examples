@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { OAuthProviders } from "@/components/oauth";
+import { OAuthProviders } from "@/components/auth/oauth";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";

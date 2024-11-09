@@ -24,14 +24,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { api } from "@/trpc/react";
 import { Logout } from "./logout";
 import { ThemeToggle } from "./theme-toggle";
-import { useUser } from "@/hooks/use-user";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
 
-  const { user } = useUser();
+  const { data: user } = api.users.getCurrent.useQuery();
+
+  if (!user) return null;
 
   return (
     <SidebarMenu>
@@ -44,7 +46,7 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={user.user_metadata.avatar_url as string}
+                  src={user.image ?? undefined}
                   alt="Profile picture"
                 />
                 <AvatarFallback className="rounded-lg">
@@ -52,9 +54,7 @@ export function NavUser() {
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <p className="truncate font-semibold">
-                  {user.user_metadata.full_name ?? user.user_metadata.full_name}
-                </p>
+                <p className="truncate font-semibold">{user.name}</p>
 
                 <p className="truncate text-xs">{user.email}</p>
               </div>
@@ -71,7 +71,7 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={user.user_metadata.avatar_url as string}
+                    src={user.image ?? undefined}
                     alt="Profile picture"
                   />
                   <AvatarFallback className="rounded-lg">
@@ -79,10 +79,7 @@ export function NavUser() {
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <p className="truncate font-semibold">
-                    {user.user_metadata.full_name ??
-                      user.user_metadata.full_name}
-                  </p>
+                  <p className="truncate font-semibold">{user.name}</p>
 
                   <p className="truncate text-xs">{user.email}</p>
                 </div>

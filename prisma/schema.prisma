@@ -11,11 +11,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Conversation {
-  id        String      @id @default(uuid())
-  userId    String
+model User {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  email     String?   @unique
+  name      String?
+  image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  activeSpaceId String
+
+  spaces Space[] 
+}
+
+model Space {
+  id      String @id @default(uuid())
+
+  name    String
+  icon    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  conversations Conversation[]
+
+  userId String
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id        String   @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  icon      String
+
+  spaceId String
+  space   Space  @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 
   messages Message[]
 }
@@ -26,12 +58,12 @@ enum MessageRole {
 }
 
 model Message {
-  id             String   @id @default(uuid())
+  id             String      @id @default(uuid())
   content        String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
   conversationId String
   role           MessageRole
 
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }
