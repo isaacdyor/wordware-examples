@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Bot } from "lucide-react";
-import ReactMarkdown from "react-markdown";
+import { MarkdownRenderer } from "../markdown-renderer";
 
 export function AssistantMessage({
   message,
@@ -38,9 +38,7 @@ export function AssistantMessage({
             ))}
           </div>
         ) : (
-          <ReactMarkdown className="prose dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 break-words">
-            {message ?? ""}
-          </ReactMarkdown>
+          <MarkdownRenderer content={message ?? ""} />
         )}
       </div>
     </div>
