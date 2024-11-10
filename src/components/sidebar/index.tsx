@@ -17,12 +17,14 @@ import {
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { NavMain } from "./nav-main";
+import { Logo } from "../logo";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <SpaceSwitcher />
+        <Logo className="fill-foreground" />
+        {/* <SpaceSwitcher /> */}
       </SidebarHeader>
       <SidebarGroup>
         <Link href="/chat">
