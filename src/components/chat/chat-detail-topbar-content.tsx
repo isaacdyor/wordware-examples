@@ -3,18 +3,14 @@
 import { useDebounce } from "@/hooks/use-debounce";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import { type Conversation } from "@prisma/client";
 import { CheckCheck, SquarePen } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 
-export function ChatDetailTopbarContent({
-  conversation,
-}: {
-  conversation: Conversation;
-}) {
-  const [title, setTitle] = useState(conversation.name);
+export function ChatDetailTopbar({ id }: { id: string }) {
+  const conversation = api.conversations.getById.useQuery({ id });
+  const [title, setTitle] = useState(conversation.data?.name ?? "");
   const [width, setWidth] = useState(500);
   const [saved, setSaved] = useState(false);
   const measureRef = useRef<HTMLSpanElement>(null);
@@ -42,13 +38,13 @@ export function ChatDetailTopbarContent({
 
     mutate({
       where: {
-        id: conversation.id,
+        id,
       },
       data: {
         name: debouncedTitle,
       },
     });
-  }, [conversation.id, debouncedTitle, mutate]);
+  }, [id, debouncedTitle, mutate]);
 
   useEffect(() => {
     if (measureRef.current) {
@@ -57,6 +53,12 @@ export function ChatDetailTopbarContent({
       setWidth(newWidth);
     }
   }, [title]);
+
+  useEffect(() => {
+    if (conversation.data?.name) {
+      setTitle(conversation.data.name);
+    }
+  }, [conversation.data?.name]);
 
   return (
     <>

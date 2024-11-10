@@ -1,33 +1,34 @@
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
-import { Pen } from "lucide-react";
-import { Button } from "../../ui/button";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import { type Conversation } from "@prisma/client";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { api } from "@/trpc/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type Conversation } from "@prisma/client";
+import { Pen } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { Button } from "../../ui/button";
 
 const FormSchema = z.object({
   name: z.string().min(1),
 });
 
 export function RenameButton({ conversation }: { conversation: Conversation }) {
+  const [isSaving, setIsSaving] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -38,15 +39,19 @@ export function RenameButton({ conversation }: { conversation: Conversation }) {
 
   const { mutate } = api.conversations.update.useMutation({
     onSuccess: async () => {
-      await utils.spaces.getCurrent.invalidate();
+      await Promise.all([
+        utils.spaces.getCurrent.invalidate(),
+        utils.conversations.getById.invalidate({ id: conversation.id }),
+      ]);
       toast.success("Conversation renamed");
+      setIsSaving(false);
     },
   });
 
   const isMobile = useIsMobile();
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
+    setIsSaving(true);
     mutate({
       where: {
         id: conversation.id,
@@ -55,6 +60,13 @@ export function RenameButton({ conversation }: { conversation: Conversation }) {
         name: data.name,
       },
     });
+  };
+
+  const handleKeyDown = async (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      await form.handleSubmit(onSubmit)();
+    }
   };
 
   return (
@@ -83,7 +95,7 @@ export function RenameButton({ conversation }: { conversation: Conversation }) {
                 <FormItem className="w-full">
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} onKeyDown={handleKeyDown} />
                   </FormControl>
                 </FormItem>
               )}
@@ -95,8 +107,9 @@ export function RenameButton({ conversation }: { conversation: Conversation }) {
                 }}
                 size="sm"
                 type="submit"
+                disabled={isSaving}
               >
-                Submit
+                {isSaving ? "Saving..." : "Save"}
               </Button>
             </div>
           </form>
