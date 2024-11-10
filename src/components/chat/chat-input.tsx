@@ -9,7 +9,6 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { api } from "@/trpc/react";
 import { type Conversation } from "@prisma/client";
 import { ChatFileUpload } from "./chat-file-upload";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useChatContext } from "@/hooks/use-chat-context";
 

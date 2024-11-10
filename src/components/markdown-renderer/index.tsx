@@ -37,13 +37,12 @@ const CopyButton = ({ text, isDark }: { text: string; isDark: boolean }) => {
 };
 
 const ThemedCodeBlock = ({
-  inline,
   className,
   children,
   isDark = false,
   ...props
 }: ThemedCodeBlockProps) => {
-  const match = /language-(\w+)/.exec(className || "");
+  const match = /language-(\w+)/.exec(className ?? "");
 
   if (!match) {
     // Only render inline code for light theme to avoid duplication
@@ -70,7 +69,6 @@ const ThemedCodeBlock = ({
       <SyntaxHighlighter
         {...props}
         PreTag="div"
-        children={content}
         language={match[1]}
         style={isDark ? materialDark : materialLight}
         customStyle={{
@@ -79,7 +77,9 @@ const ThemedCodeBlock = ({
           margin: "1rem 0",
         }}
         className={isDark ? "hidden dark:block" : "dark:hidden"}
-      />
+      >
+        {content}
+      </SyntaxHighlighter>
     </div>
   );
 };
@@ -157,11 +157,13 @@ const MarkdownComponents = {
     ...props
   }: React.ComponentPropsWithoutRef<"img">) => (
     <Image
-      src={src || ""}
-      alt={alt || "image"}
+      src={src ?? ""}
+      alt={alt ?? "image"}
       className="rounded-lg border"
-      width={typeof width === "string" ? parseInt(width, 10) : width || 500}
-      height={typeof height === "string" ? parseInt(height, 10) : height || 300}
+      width={typeof width === "string" ? parseInt(width, 10) : (width ?? 500)}
+      height={
+        typeof height === "string" ? parseInt(height, 10) : (height ?? 300)
+      }
       {...props}
     />
   ),

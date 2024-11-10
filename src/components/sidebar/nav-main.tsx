@@ -11,27 +11,31 @@ import {
 } from "@/components/ui/sidebar";
 import { api } from "@/trpc/react";
 import Link from "next/link";
+import { useParams } from "next/dist/client/components/navigation";
+import { cn } from "@/lib/utils";
 
 export function NavMain() {
-  return null;
   const { data: space } = api.spaces.getCurrent.useQuery();
 
-  console.log(space);
+  const params = useParams();
+  const id = params.id as string;
 
-  if (!space) return null;
-
-  const conversations = space.conversations;
+  const conversations = space?.conversations;
+  if (conversations?.length === 0) return null;
 
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Chats</SidebarGroupLabel>
       <SidebarMenu>
-        {conversations.map((conversation) => (
+        {conversations?.map((conversation) => (
           <Link href={`/chat/${conversation.id}`} key={conversation.id}>
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip={conversation.id}>
+              <SidebarMenuButton
+                className={cn(conversation.id === id && "bg-muted")}
+                tooltip={conversation.id}
+              >
                 <Bot />
-                <span>{conversation.id}</span>
+                <span>{conversation.name}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </Link>

@@ -20,6 +20,10 @@ const FormSchema = z.object({
 });
 
 export function NewChatInput() {
+  const { data: space } = api.spaces.getCurrent.useQuery();
+
+  const utils = api.useUtils();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -28,12 +32,21 @@ export function NewChatInput() {
 
   const { mutate } = api.conversations.create.useMutation({
     onSuccess: (data: { id: string }) => {
+      void utils.spaces.getCurrent.invalidate();
       router.push(`/chat/${data.id}`);
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    mutate({ conversation: { userId: "unnecessary" }, message: data.message });
+    if (!space) return;
+    mutate({
+      conversation: {
+        icon: "MessageCircle",
+        name: "New Chat",
+        space: { connect: { id: space.id } },
+      },
+      message: data.message,
+    });
   };
 
   const handleKeyDown = async (e: React.KeyboardEvent) => {

@@ -1,8 +1,8 @@
 import { useChatContext } from "@/hooks/use-chat-context";
 import { cn } from "@/lib/utils";
-import { PutBlobResult } from "@vercel/blob";
+import { type PutBlobResult } from "@vercel/blob";
 import { CloudUpload, Loader2, X } from "lucide-react";
-import { ChangeEvent, useCallback, useRef, useState } from "react";
+import { type ChangeEvent, useCallback, useRef, useState } from "react";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 

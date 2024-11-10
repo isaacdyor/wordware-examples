@@ -8,9 +8,14 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
   SidebarHeader,
+  SidebarMenuButton,
   SidebarRail,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 import { NavMain } from "./nav-main";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -19,6 +24,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <TeamSwitcher />
       </SidebarHeader>
+      <SidebarGroup>
+        <Link href="/chat">
+          <SidebarMenuButton tooltip="Create Chat">
+            <Plus />
+            <span>Create Chat</span>
+          </SidebarMenuButton>
+        </Link>
+      </SidebarGroup>
+      <SidebarSeparator />
       <SidebarContent>
         <NavMain />
       </SidebarContent>

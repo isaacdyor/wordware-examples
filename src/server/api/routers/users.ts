@@ -15,7 +15,7 @@ export const usersRouter = createTRPCRouter({
         const space = await prisma.space.create({
           data: {
             name: "Personal",
-            icon: "user",
+            icon: "User",
             userId: user.id,
           },
         });
@@ -32,7 +32,7 @@ export const usersRouter = createTRPCRouter({
 
   getCurrent: privateProcedure.query(async ({ ctx }) => {
     return ctx.db.user.findUnique({
-      where: { id: ctx.user.id },
+      where: { userId: ctx.user.id },
       include: {
         spaces: {
           include: {

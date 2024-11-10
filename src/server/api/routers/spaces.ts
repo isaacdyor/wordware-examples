@@ -12,7 +12,7 @@ export const spacesRouter = createTRPCRouter({
 
   getCurrent: privateProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.user.findUnique({
-      where: { id: ctx.user.id },
+      where: { userId: ctx.user.id },
       select: { activeSpaceId: true },
     });
 
