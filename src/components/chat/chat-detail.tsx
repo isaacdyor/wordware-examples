@@ -30,17 +30,17 @@ export function ChatDetail() {
     });
   }, [conversation?.messages, streamedContent]);
 
-  // useEffect(() => {
-  //   if (conversation?.messages.length === 1) {
-  //     void fetchStream("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
-  //       message: conversation?.messages[0]?.content,
-  //     });
-  //     setTimeout(() => {
-  //       setIsLoading(true);
-  //     }, 1000);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    if (conversation?.messages.length === 1) {
+      void fetchStream("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
+        message: conversation?.messages[0]?.content,
+      });
+      setTimeout(() => {
+        setIsLoading(true);
+      }, 1000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
