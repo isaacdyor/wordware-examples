@@ -1,6 +1,6 @@
 import { ChatDetail } from "@/components/chat/chat-detail";
 import { ChatDetailTopbarContent } from "@/components/chat/chat-detail-topbar-content";
-import { TopBar } from "@/components/sidebar/topbar";
+import { Topbar } from "@/components/sidebar/topbar";
 import { ChatProvider } from "@/providers/chat-provider";
 import { api, HydrateClient } from "@/trpc/server";
 
@@ -13,18 +13,18 @@ export default async function ChatPage({
   const conversation = await api.conversations.getById({ id });
   await api.conversations.getById.prefetch({ id });
 
+  if (!conversation) return null;
+
   return (
     <HydrateClient>
       <ChatProvider>
-        <TopBar
+        <Topbar
           topbarContent={
-            <ChatDetailTopbarContent
-              conversationName={conversation?.name ?? ""}
-            />
+            <ChatDetailTopbarContent conversation={conversation} />
           }
         >
           <ChatDetail />
-        </TopBar>
+        </Topbar>
       </ChatProvider>
     </HydrateClient>
   );

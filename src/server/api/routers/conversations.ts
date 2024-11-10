@@ -1,6 +1,8 @@
 import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
 import {
   ConversationCreateInputSchema,
+  ConversationUpdateArgsSchema,
+  ConversationUpdateInputSchema,
   MessageCreateInputSchema,
 } from "prisma/generated/zod";
 import { z } from "zod";
@@ -25,6 +27,12 @@ export const conversationsRouter = createTRPCRouter({
           },
         },
       });
+    }),
+
+  update: privateProcedure
+    .input(ConversationUpdateArgsSchema)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.conversation.update(input);
     }),
 
   addMessage: privateProcedure

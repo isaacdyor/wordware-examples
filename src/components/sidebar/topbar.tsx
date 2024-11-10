@@ -1,6 +1,6 @@
 import { SidebarTrigger } from "../ui/sidebar";
 
-export function TopBar({
+export function Topbar({
   children,
   topbarContent,
 }: {
