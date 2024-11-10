@@ -24,6 +24,7 @@ export const spacesRouter = createTRPCRouter({
       where: { id: user.activeSpaceId },
       include: {
         conversations: {
+          where: { archived: false },
           orderBy: {
             createdAt: "asc",
           },

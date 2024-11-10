@@ -34,6 +34,15 @@ export const conversationsRouter = createTRPCRouter({
       return ctx.db.conversation.update(input);
     }),
 
+  archive: privateProcedure
+    .input(z.object({ id: z.string(), archived: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.conversation.update({
+        where: { id: input.id },
+        data: { archived: input.archived },
+      });
+    }),
+
   delete: privateProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {

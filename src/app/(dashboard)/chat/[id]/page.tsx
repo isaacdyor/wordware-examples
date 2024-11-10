@@ -3,6 +3,7 @@ import { ChatDetailTopbarContent } from "@/components/chat/chat-detail-topbar-co
 import { Topbar } from "@/components/sidebar/topbar";
 import { ChatProvider } from "@/providers/chat-provider";
 import { api, HydrateClient } from "@/trpc/server";
+import { redirect } from "next/navigation";
 
 export default async function ChatPage({
   params,
@@ -13,7 +14,7 @@ export default async function ChatPage({
   const conversation = await api.conversations.getById({ id });
   await api.conversations.getById.prefetch({ id });
 
-  if (!conversation) return null;
+  if (!conversation) redirect("/chat");
 
   return (
     <HydrateClient>

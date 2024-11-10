@@ -16,7 +16,7 @@ export const UserScalarFieldEnumSchema = z.enum(['id','userId','email','name','i
 
 export const SpaceScalarFieldEnumSchema = z.enum(['id','name','icon','createdAt','updatedAt','userId']);
 
-export const ConversationScalarFieldEnumSchema = z.enum(['id','name','createdAt','updatedAt','spaceId']);
+export const ConversationScalarFieldEnumSchema = z.enum(['id','name','createdAt','updatedAt','archived','spaceId']);
 
 export const MessageScalarFieldEnumSchema = z.enum(['id','content','createdAt','updatedAt','conversationId','role']);
 
@@ -75,6 +75,7 @@ export const ConversationSchema = z.object({
   name: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  archived: z.boolean(),
   spaceId: z.string(),
 })
 
@@ -194,6 +195,7 @@ export const ConversationSelectSchema: z.ZodType<Prisma.ConversationSelect> = z.
   name: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
+  archived: z.boolean().optional(),
   spaceId: z.boolean().optional(),
   space: z.union([z.boolean(),z.lazy(() => SpaceArgsSchema)]).optional(),
   messages: z.union([z.boolean(),z.lazy(() => MessageFindManyArgsSchema)]).optional(),
@@ -399,6 +401,7 @@ export const ConversationWhereInputSchema: z.ZodType<Prisma.ConversationWhereInp
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  archived: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   spaceId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   space: z.union([ z.lazy(() => SpaceRelationFilterSchema),z.lazy(() => SpaceWhereInputSchema) ]).optional(),
   messages: z.lazy(() => MessageListRelationFilterSchema).optional()
@@ -409,6 +412,7 @@ export const ConversationOrderByWithRelationInputSchema: z.ZodType<Prisma.Conver
   name: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  archived: z.lazy(() => SortOrderSchema).optional(),
   spaceId: z.lazy(() => SortOrderSchema).optional(),
   space: z.lazy(() => SpaceOrderByWithRelationInputSchema).optional(),
   messages: z.lazy(() => MessageOrderByRelationAggregateInputSchema).optional()
@@ -425,6 +429,7 @@ export const ConversationWhereUniqueInputSchema: z.ZodType<Prisma.ConversationWh
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  archived: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   spaceId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   space: z.union([ z.lazy(() => SpaceRelationFilterSchema),z.lazy(() => SpaceWhereInputSchema) ]).optional(),
   messages: z.lazy(() => MessageListRelationFilterSchema).optional()
@@ -435,6 +440,7 @@ export const ConversationOrderByWithAggregationInputSchema: z.ZodType<Prisma.Con
   name: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  archived: z.lazy(() => SortOrderSchema).optional(),
   spaceId: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => ConversationCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => ConversationMaxOrderByAggregateInputSchema).optional(),
@@ -449,6 +455,7 @@ export const ConversationScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.
   name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+  archived: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
   spaceId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
 }).strict();
 
@@ -667,6 +674,7 @@ export const ConversationCreateInputSchema: z.ZodType<Prisma.ConversationCreateI
   name: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  archived: z.boolean().optional(),
   space: z.lazy(() => SpaceCreateNestedOneWithoutConversationsInputSchema),
   messages: z.lazy(() => MessageCreateNestedManyWithoutConversationInputSchema).optional()
 }).strict();
@@ -676,6 +684,7 @@ export const ConversationUncheckedCreateInputSchema: z.ZodType<Prisma.Conversati
   name: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  archived: z.boolean().optional(),
   spaceId: z.string(),
   messages: z.lazy(() => MessageUncheckedCreateNestedManyWithoutConversationInputSchema).optional()
 }).strict();
@@ -685,6 +694,7 @@ export const ConversationUpdateInputSchema: z.ZodType<Prisma.ConversationUpdateI
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  archived: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   space: z.lazy(() => SpaceUpdateOneRequiredWithoutConversationsNestedInputSchema).optional(),
   messages: z.lazy(() => MessageUpdateManyWithoutConversationNestedInputSchema).optional()
 }).strict();
@@ -694,6 +704,7 @@ export const ConversationUncheckedUpdateInputSchema: z.ZodType<Prisma.Conversati
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  archived: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   spaceId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   messages: z.lazy(() => MessageUncheckedUpdateManyWithoutConversationNestedInputSchema).optional()
 }).strict();
@@ -703,6 +714,7 @@ export const ConversationCreateManyInputSchema: z.ZodType<Prisma.ConversationCre
   name: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  archived: z.boolean().optional(),
   spaceId: z.string()
 }).strict();
 
@@ -711,6 +723,7 @@ export const ConversationUpdateManyMutationInputSchema: z.ZodType<Prisma.Convers
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  archived: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const ConversationUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateManyInput> = z.object({
@@ -718,6 +731,7 @@ export const ConversationUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Conver
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  archived: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   spaceId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -964,6 +978,11 @@ export const SpaceMinOrderByAggregateInputSchema: z.ZodType<Prisma.SpaceMinOrder
   userId: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
+export const BoolFilterSchema: z.ZodType<Prisma.BoolFilter> = z.object({
+  equals: z.boolean().optional(),
+  not: z.union([ z.boolean(),z.lazy(() => NestedBoolFilterSchema) ]).optional(),
+}).strict();
+
 export const SpaceRelationFilterSchema: z.ZodType<Prisma.SpaceRelationFilter> = z.object({
   is: z.lazy(() => SpaceWhereInputSchema).optional(),
   isNot: z.lazy(() => SpaceWhereInputSchema).optional()
@@ -984,6 +1003,7 @@ export const ConversationCountOrderByAggregateInputSchema: z.ZodType<Prisma.Conv
   name: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  archived: z.lazy(() => SortOrderSchema).optional(),
   spaceId: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -992,6 +1012,7 @@ export const ConversationMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Conver
   name: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  archived: z.lazy(() => SortOrderSchema).optional(),
   spaceId: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -1000,7 +1021,16 @@ export const ConversationMinOrderByAggregateInputSchema: z.ZodType<Prisma.Conver
   name: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  archived: z.lazy(() => SortOrderSchema).optional(),
   spaceId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const BoolWithAggregatesFilterSchema: z.ZodType<Prisma.BoolWithAggregatesFilter> = z.object({
+  equals: z.boolean().optional(),
+  not: z.union([ z.boolean(),z.lazy(() => NestedBoolWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedBoolFilterSchema).optional(),
+  _max: z.lazy(() => NestedBoolFilterSchema).optional()
 }).strict();
 
 export const EnumMessageRoleFilterSchema: z.ZodType<Prisma.EnumMessageRoleFilter> = z.object({
@@ -1182,6 +1212,10 @@ export const MessageUncheckedCreateNestedManyWithoutConversationInputSchema: z.Z
   connect: z.union([ z.lazy(() => MessageWhereUniqueInputSchema),z.lazy(() => MessageWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
+export const BoolFieldUpdateOperationsInputSchema: z.ZodType<Prisma.BoolFieldUpdateOperationsInput> = z.object({
+  set: z.boolean().optional()
+}).strict();
+
 export const SpaceUpdateOneRequiredWithoutConversationsNestedInputSchema: z.ZodType<Prisma.SpaceUpdateOneRequiredWithoutConversationsNestedInput> = z.object({
   create: z.union([ z.lazy(() => SpaceCreateWithoutConversationsInputSchema),z.lazy(() => SpaceUncheckedCreateWithoutConversationsInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => SpaceCreateOrConnectWithoutConversationsInputSchema).optional(),
@@ -1345,6 +1379,19 @@ export const NestedDateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.NestedDa
   _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
 }).strict();
 
+export const NestedBoolFilterSchema: z.ZodType<Prisma.NestedBoolFilter> = z.object({
+  equals: z.boolean().optional(),
+  not: z.union([ z.boolean(),z.lazy(() => NestedBoolFilterSchema) ]).optional(),
+}).strict();
+
+export const NestedBoolWithAggregatesFilterSchema: z.ZodType<Prisma.NestedBoolWithAggregatesFilter> = z.object({
+  equals: z.boolean().optional(),
+  not: z.union([ z.boolean(),z.lazy(() => NestedBoolWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedBoolFilterSchema).optional(),
+  _max: z.lazy(() => NestedBoolFilterSchema).optional()
+}).strict();
+
 export const NestedEnumMessageRoleFilterSchema: z.ZodType<Prisma.NestedEnumMessageRoleFilter> = z.object({
   equals: z.lazy(() => MessageRoleSchema).optional(),
   in: z.lazy(() => MessageRoleSchema).array().optional(),
@@ -1423,6 +1470,7 @@ export const ConversationCreateWithoutSpaceInputSchema: z.ZodType<Prisma.Convers
   name: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  archived: z.boolean().optional(),
   messages: z.lazy(() => MessageCreateNestedManyWithoutConversationInputSchema).optional()
 }).strict();
 
@@ -1431,6 +1479,7 @@ export const ConversationUncheckedCreateWithoutSpaceInputSchema: z.ZodType<Prism
   name: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  archived: z.boolean().optional(),
   messages: z.lazy(() => MessageUncheckedCreateNestedManyWithoutConversationInputSchema).optional()
 }).strict();
 
@@ -1495,6 +1544,7 @@ export const ConversationScalarWhereInputSchema: z.ZodType<Prisma.ConversationSc
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  archived: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   spaceId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
 }).strict();
 
@@ -1642,6 +1692,7 @@ export const ConversationCreateWithoutMessagesInputSchema: z.ZodType<Prisma.Conv
   name: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  archived: z.boolean().optional(),
   space: z.lazy(() => SpaceCreateNestedOneWithoutConversationsInputSchema)
 }).strict();
 
@@ -1650,6 +1701,7 @@ export const ConversationUncheckedCreateWithoutMessagesInputSchema: z.ZodType<Pr
   name: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  archived: z.boolean().optional(),
   spaceId: z.string()
 }).strict();
 
@@ -1674,6 +1726,7 @@ export const ConversationUpdateWithoutMessagesInputSchema: z.ZodType<Prisma.Conv
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  archived: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   space: z.lazy(() => SpaceUpdateOneRequiredWithoutConversationsNestedInputSchema).optional()
 }).strict();
 
@@ -1682,6 +1735,7 @@ export const ConversationUncheckedUpdateWithoutMessagesInputSchema: z.ZodType<Pr
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  archived: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   spaceId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -1723,7 +1777,8 @@ export const ConversationCreateManySpaceInputSchema: z.ZodType<Prisma.Conversati
   id: z.string().optional(),
   name: z.string(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional()
+  updatedAt: z.coerce.date().optional(),
+  archived: z.boolean().optional()
 }).strict();
 
 export const ConversationUpdateWithoutSpaceInputSchema: z.ZodType<Prisma.ConversationUpdateWithoutSpaceInput> = z.object({
@@ -1731,6 +1786,7 @@ export const ConversationUpdateWithoutSpaceInputSchema: z.ZodType<Prisma.Convers
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  archived: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   messages: z.lazy(() => MessageUpdateManyWithoutConversationNestedInputSchema).optional()
 }).strict();
 
@@ -1739,6 +1795,7 @@ export const ConversationUncheckedUpdateWithoutSpaceInputSchema: z.ZodType<Prism
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  archived: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   messages: z.lazy(() => MessageUncheckedUpdateManyWithoutConversationNestedInputSchema).optional()
 }).strict();
 
@@ -1747,6 +1804,7 @@ export const ConversationUncheckedUpdateManyWithoutSpaceInputSchema: z.ZodType<P
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  archived: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const MessageCreateManyConversationInputSchema: z.ZodType<Prisma.MessageCreateManyConversationInput> = z.object({

@@ -1,9 +1,17 @@
 import { Menu } from "lucide-react";
-import { SheetTrigger, SheetContent, Sheet } from "../ui/sheet";
+import {
+  SheetTrigger,
+  SheetContent,
+  Sheet,
+  SheetTitle,
+  SheetDescription,
+  SheetHeader,
+} from "../ui/sheet";
 import { useState } from "react";
 import Link from "next/link";
 import { navItems } from ".";
 import { NavButtons } from "./nav-buttons";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -11,13 +19,19 @@ export function MobileNav() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <button className="h-10 w-10 p-0 hover:bg-secondary rounded-md inline-flex items-center justify-center">
+        <button className="inline-flex h-10 w-10 items-center justify-center rounded-md p-0 hover:bg-secondary">
           <Menu className="h-6 w-6" />
         </button>
       </SheetTrigger>
+      <VisuallyHidden.Root>
+        <SheetHeader>
+          <SheetTitle>Menu</SheetTitle>
+          <SheetDescription>Mobile navigation menu</SheetDescription>
+        </SheetHeader>
+      </VisuallyHidden.Root>
       <SheetContent
         side="right"
-        className="w-[300px] sm:w-[400px] flex flex-col justify-between"
+        className="flex w-[300px] flex-col justify-between sm:w-[400px]"
       >
         <nav className="flex flex-col space-y-4">
           {navItems.map((item) => (

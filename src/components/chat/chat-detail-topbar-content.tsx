@@ -5,10 +5,9 @@ import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { type Conversation } from "@prisma/client";
 import { CheckCheck, SquarePen } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { Input } from "../ui/input";
 
 export function ChatDetailTopbarContent({
   conversation,
