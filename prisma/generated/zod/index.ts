@@ -16,7 +16,7 @@ export const UserScalarFieldEnumSchema = z.enum(['id','userId','email','name','i
 
 export const SpaceScalarFieldEnumSchema = z.enum(['id','name','icon','createdAt','updatedAt','userId']);
 
-export const ConversationScalarFieldEnumSchema = z.enum(['id','name','icon','createdAt','updatedAt','spaceId']);
+export const ConversationScalarFieldEnumSchema = z.enum(['id','name','createdAt','updatedAt','spaceId']);
 
 export const MessageScalarFieldEnumSchema = z.enum(['id','content','createdAt','updatedAt','conversationId','role']);
 
@@ -73,7 +73,6 @@ export type Space = z.infer<typeof SpaceSchema>
 export const ConversationSchema = z.object({
   id: z.string(),
   name: z.string(),
-  icon: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   spaceId: z.string(),
@@ -193,7 +192,6 @@ export const ConversationCountOutputTypeSelectSchema: z.ZodType<Prisma.Conversat
 export const ConversationSelectSchema: z.ZodType<Prisma.ConversationSelect> = z.object({
   id: z.boolean().optional(),
   name: z.boolean().optional(),
-  icon: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   spaceId: z.boolean().optional(),
@@ -399,7 +397,6 @@ export const ConversationWhereInputSchema: z.ZodType<Prisma.ConversationWhereInp
   NOT: z.union([ z.lazy(() => ConversationWhereInputSchema),z.lazy(() => ConversationWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  icon: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   spaceId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
@@ -410,7 +407,6 @@ export const ConversationWhereInputSchema: z.ZodType<Prisma.ConversationWhereInp
 export const ConversationOrderByWithRelationInputSchema: z.ZodType<Prisma.ConversationOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  icon: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   spaceId: z.lazy(() => SortOrderSchema).optional(),
@@ -427,7 +423,6 @@ export const ConversationWhereUniqueInputSchema: z.ZodType<Prisma.ConversationWh
   OR: z.lazy(() => ConversationWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => ConversationWhereInputSchema),z.lazy(() => ConversationWhereInputSchema).array() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  icon: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   spaceId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
@@ -438,7 +433,6 @@ export const ConversationWhereUniqueInputSchema: z.ZodType<Prisma.ConversationWh
 export const ConversationOrderByWithAggregationInputSchema: z.ZodType<Prisma.ConversationOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  icon: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   spaceId: z.lazy(() => SortOrderSchema).optional(),
@@ -453,7 +447,6 @@ export const ConversationScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.
   NOT: z.union([ z.lazy(() => ConversationScalarWhereWithAggregatesInputSchema),z.lazy(() => ConversationScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  icon: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   spaceId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
@@ -672,7 +665,6 @@ export const SpaceUncheckedUpdateManyInputSchema: z.ZodType<Prisma.SpaceUnchecke
 export const ConversationCreateInputSchema: z.ZodType<Prisma.ConversationCreateInput> = z.object({
   id: z.string().optional(),
   name: z.string(),
-  icon: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   space: z.lazy(() => SpaceCreateNestedOneWithoutConversationsInputSchema),
@@ -682,7 +674,6 @@ export const ConversationCreateInputSchema: z.ZodType<Prisma.ConversationCreateI
 export const ConversationUncheckedCreateInputSchema: z.ZodType<Prisma.ConversationUncheckedCreateInput> = z.object({
   id: z.string().optional(),
   name: z.string(),
-  icon: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   spaceId: z.string(),
@@ -692,7 +683,6 @@ export const ConversationUncheckedCreateInputSchema: z.ZodType<Prisma.Conversati
 export const ConversationUpdateInputSchema: z.ZodType<Prisma.ConversationUpdateInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  icon: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   space: z.lazy(() => SpaceUpdateOneRequiredWithoutConversationsNestedInputSchema).optional(),
@@ -702,7 +692,6 @@ export const ConversationUpdateInputSchema: z.ZodType<Prisma.ConversationUpdateI
 export const ConversationUncheckedUpdateInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  icon: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   spaceId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -712,7 +701,6 @@ export const ConversationUncheckedUpdateInputSchema: z.ZodType<Prisma.Conversati
 export const ConversationCreateManyInputSchema: z.ZodType<Prisma.ConversationCreateManyInput> = z.object({
   id: z.string().optional(),
   name: z.string(),
-  icon: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   spaceId: z.string()
@@ -721,7 +709,6 @@ export const ConversationCreateManyInputSchema: z.ZodType<Prisma.ConversationCre
 export const ConversationUpdateManyMutationInputSchema: z.ZodType<Prisma.ConversationUpdateManyMutationInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  icon: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -729,7 +716,6 @@ export const ConversationUpdateManyMutationInputSchema: z.ZodType<Prisma.Convers
 export const ConversationUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  icon: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   spaceId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -996,7 +982,6 @@ export const MessageOrderByRelationAggregateInputSchema: z.ZodType<Prisma.Messag
 export const ConversationCountOrderByAggregateInputSchema: z.ZodType<Prisma.ConversationCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  icon: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   spaceId: z.lazy(() => SortOrderSchema).optional()
@@ -1005,7 +990,6 @@ export const ConversationCountOrderByAggregateInputSchema: z.ZodType<Prisma.Conv
 export const ConversationMaxOrderByAggregateInputSchema: z.ZodType<Prisma.ConversationMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  icon: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   spaceId: z.lazy(() => SortOrderSchema).optional()
@@ -1014,7 +998,6 @@ export const ConversationMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Conver
 export const ConversationMinOrderByAggregateInputSchema: z.ZodType<Prisma.ConversationMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  icon: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   spaceId: z.lazy(() => SortOrderSchema).optional()
@@ -1438,7 +1421,6 @@ export const SpaceScalarWhereInputSchema: z.ZodType<Prisma.SpaceScalarWhereInput
 export const ConversationCreateWithoutSpaceInputSchema: z.ZodType<Prisma.ConversationCreateWithoutSpaceInput> = z.object({
   id: z.string().optional(),
   name: z.string(),
-  icon: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   messages: z.lazy(() => MessageCreateNestedManyWithoutConversationInputSchema).optional()
@@ -1447,7 +1429,6 @@ export const ConversationCreateWithoutSpaceInputSchema: z.ZodType<Prisma.Convers
 export const ConversationUncheckedCreateWithoutSpaceInputSchema: z.ZodType<Prisma.ConversationUncheckedCreateWithoutSpaceInput> = z.object({
   id: z.string().optional(),
   name: z.string(),
-  icon: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   messages: z.lazy(() => MessageUncheckedCreateNestedManyWithoutConversationInputSchema).optional()
@@ -1512,7 +1493,6 @@ export const ConversationScalarWhereInputSchema: z.ZodType<Prisma.ConversationSc
   NOT: z.union([ z.lazy(() => ConversationScalarWhereInputSchema),z.lazy(() => ConversationScalarWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  icon: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   spaceId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
@@ -1660,7 +1640,6 @@ export const MessageScalarWhereInputSchema: z.ZodType<Prisma.MessageScalarWhereI
 export const ConversationCreateWithoutMessagesInputSchema: z.ZodType<Prisma.ConversationCreateWithoutMessagesInput> = z.object({
   id: z.string().optional(),
   name: z.string(),
-  icon: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   space: z.lazy(() => SpaceCreateNestedOneWithoutConversationsInputSchema)
@@ -1669,7 +1648,6 @@ export const ConversationCreateWithoutMessagesInputSchema: z.ZodType<Prisma.Conv
 export const ConversationUncheckedCreateWithoutMessagesInputSchema: z.ZodType<Prisma.ConversationUncheckedCreateWithoutMessagesInput> = z.object({
   id: z.string().optional(),
   name: z.string(),
-  icon: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   spaceId: z.string()
@@ -1694,7 +1672,6 @@ export const ConversationUpdateToOneWithWhereWithoutMessagesInputSchema: z.ZodTy
 export const ConversationUpdateWithoutMessagesInputSchema: z.ZodType<Prisma.ConversationUpdateWithoutMessagesInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  icon: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   space: z.lazy(() => SpaceUpdateOneRequiredWithoutConversationsNestedInputSchema).optional()
@@ -1703,7 +1680,6 @@ export const ConversationUpdateWithoutMessagesInputSchema: z.ZodType<Prisma.Conv
 export const ConversationUncheckedUpdateWithoutMessagesInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateWithoutMessagesInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  icon: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   spaceId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -1746,7 +1722,6 @@ export const SpaceUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.Sp
 export const ConversationCreateManySpaceInputSchema: z.ZodType<Prisma.ConversationCreateManySpaceInput> = z.object({
   id: z.string().optional(),
   name: z.string(),
-  icon: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -1754,7 +1729,6 @@ export const ConversationCreateManySpaceInputSchema: z.ZodType<Prisma.Conversati
 export const ConversationUpdateWithoutSpaceInputSchema: z.ZodType<Prisma.ConversationUpdateWithoutSpaceInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  icon: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   messages: z.lazy(() => MessageUpdateManyWithoutConversationNestedInputSchema).optional()
@@ -1763,7 +1737,6 @@ export const ConversationUpdateWithoutSpaceInputSchema: z.ZodType<Prisma.Convers
 export const ConversationUncheckedUpdateWithoutSpaceInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateWithoutSpaceInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  icon: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   messages: z.lazy(() => MessageUncheckedUpdateManyWithoutConversationNestedInputSchema).optional()
@@ -1772,7 +1745,6 @@ export const ConversationUncheckedUpdateWithoutSpaceInputSchema: z.ZodType<Prism
 export const ConversationUncheckedUpdateManyWithoutSpaceInputSchema: z.ZodType<Prisma.ConversationUncheckedUpdateManyWithoutSpaceInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  icon: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();

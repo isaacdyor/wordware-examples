@@ -41,7 +41,6 @@ export function NewChatInput() {
     if (!space) return;
     mutate({
       conversation: {
-        icon: "MessageCircle",
         name: "New Chat",
         space: { connect: { id: space.id } },
       },

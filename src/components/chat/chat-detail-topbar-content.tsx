@@ -1,13 +1,13 @@
 "use client";
 
-import { CheckCheck, SquarePen } from "lucide-react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { useState, useRef, useEffect } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
+import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { type Conversation } from "@prisma/client";
-import { cn } from "@/lib/utils";
+import { CheckCheck, SquarePen } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 export function ChatDetailTopbarContent({
   conversation,
@@ -15,12 +15,22 @@ export function ChatDetailTopbarContent({
   conversation: Conversation;
 }) {
   const [title, setTitle] = useState(conversation.name);
-  const [width, setWidth] = useState(102);
+  const [width, setWidth] = useState(500);
   const [saved, setSaved] = useState(false);
   const measureRef = useRef<HTMLSpanElement>(null);
   const debouncedTitle = useDebounce(title, 800);
 
-  const { mutate } = api.conversations.update.useMutation();
+  const utils = api.useUtils();
+
+  const { mutate } = api.conversations.update.useMutation({
+    onSuccess: async () => {
+      setSaved(true);
+      setTimeout(() => {
+        setSaved(false);
+      }, 2000);
+      await utils.spaces.getCurrent.invalidate();
+    },
+  });
 
   const isFirstRender = useRef(true);
 
@@ -38,21 +48,12 @@ export function ChatDetailTopbarContent({
         name: debouncedTitle,
       },
     });
-    setSaved(true);
-    const timer = setTimeout(() => {
-      setSaved(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [debouncedTitle]);
+  }, [conversation.id, debouncedTitle, mutate]);
 
   useEffect(() => {
     if (measureRef.current) {
-      const maxWidth = window.innerWidth < 640 ? 250 : 500;
-      const newWidth = Math.min(
-        Math.max(measureRef.current.offsetWidth, 102),
-        maxWidth,
-      );
+      const newWidth =
+        Math.min(Math.max(measureRef.current.offsetWidth, 50), 500) + 10;
       setWidth(newWidth);
     }
   }, [title]);
@@ -63,17 +64,17 @@ export function ChatDetailTopbarContent({
         <div className="relative">
           <span
             ref={measureRef}
-            className="invisible absolute whitespace-pre px-2 py-0.5 text-sm"
+            className="invisible absolute whitespace-pre py-0.5 pl-3 pr-1 text-sm"
             style={{ fontFamily: "inherit" }}
           >
             {title}
           </span>
 
           <Input
-            placeholder="Chat name"
+            placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="h-6 border-none focus-visible:ring-0"
+            className="h-6 max-w-xl border-none text-center focus-visible:ring-0 sm:max-w-none"
             style={{ width: `${width}px` }}
           />
         </div>
@@ -88,7 +89,7 @@ export function ChatDetailTopbarContent({
         </div>
       </div>
 
-      <Button className="size-4 bg-background p-0 text-foreground hover:bg-background hover:text-muted-foreground">
+      <Button className="size-4 bg-transparent p-0 text-foreground hover:bg-transparent hover:text-muted-foreground">
         <SquarePen className="size-5" />
       </Button>
     </>

@@ -71,7 +71,7 @@ export function ChatDetail() {
 
   return (
     <div
-      className="relative flex h-[calc(100vh-56px)] flex-col justify-between gap-4"
+      className="relative flex h-[calc(100vh-73px)] flex-col justify-between gap-4"
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}

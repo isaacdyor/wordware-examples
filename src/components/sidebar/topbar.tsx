@@ -9,11 +9,15 @@ export function Topbar({
 }) {
   return (
     <>
-      <div className="sticky top-0 z-20 flex w-full items-center justify-between bg-background p-2">
-        <SidebarTrigger className="size-4 bg-background" />
+      <div className="sticky top-0 z-20 flex w-full items-center justify-between bg-sidebar p-2">
+        <SidebarTrigger className="size-4 bg-transparent" />
         {topbarContent}
       </div>
-      <div className="p-4 pt-0">{children}</div>
+      <div className="bg-sidebar">
+        <div className="rounded-tl-lg border-l border-t bg-background p-4">
+          {children}
+        </div>
+      </div>
     </>
   );
 }

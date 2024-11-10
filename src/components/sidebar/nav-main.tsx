@@ -32,9 +32,8 @@ export function NavMain() {
             <SidebarMenuItem>
               <SidebarMenuButton
                 className={cn(conversation.id === id && "bg-muted")}
-                tooltip={conversation.id}
+                tooltip={conversation.name}
               >
-                <Bot />
                 <span>{conversation.name}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>

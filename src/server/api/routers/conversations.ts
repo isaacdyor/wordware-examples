@@ -2,7 +2,6 @@ import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
 import {
   ConversationCreateInputSchema,
   ConversationUpdateArgsSchema,
-  ConversationUpdateInputSchema,
   MessageCreateInputSchema,
 } from "prisma/generated/zod";
 import { z } from "zod";
