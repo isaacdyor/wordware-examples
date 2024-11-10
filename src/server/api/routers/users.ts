@@ -1,4 +1,5 @@
 import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
+import { z } from "node_modules/zod/lib";
 import { UserCreateInputSchema } from "prisma/generated/zod";
 
 export const usersRouter = createTRPCRouter({
@@ -46,4 +47,13 @@ export const usersRouter = createTRPCRouter({
       },
     });
   }),
+
+  updateActiveSpace: privateProcedure
+    .input(z.object({ spaceId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: { userId: ctx.user.id },
+        data: { activeSpaceId: input.spaceId },
+      });
+    }),
 });

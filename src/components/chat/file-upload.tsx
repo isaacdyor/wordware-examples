@@ -6,7 +6,7 @@ import { type ChangeEvent, useCallback, useRef, useState } from "react";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
-export function ChatFileUpload() {
+export function FileUpload() {
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
   const localDragCounter = useRef(0);

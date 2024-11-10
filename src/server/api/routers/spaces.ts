@@ -6,7 +6,14 @@ export const spacesRouter = createTRPCRouter({
     .input(SpaceCreateInputSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.space.create({
-        data: input,
+        data: {
+          ...input,
+          user: {
+            connect: {
+              userId: ctx.user.id,
+            },
+          },
+        },
       });
     }),
 
@@ -30,12 +37,6 @@ export const spacesRouter = createTRPCRouter({
           },
         },
       },
-    });
-  }),
-
-  getAll: privateProcedure.query(async ({ ctx }) => {
-    return ctx.db.space.findMany({
-      where: { userId: ctx.user.id },
     });
   }),
 });

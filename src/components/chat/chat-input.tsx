@@ -8,7 +8,7 @@ import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { api } from "@/trpc/react";
 import { type Conversation } from "@prisma/client";
-import { ChatFileUpload } from "./chat-file-upload";
+import { FileUpload } from "./file-upload";
 import { cn } from "@/lib/utils";
 import { useChatContext } from "@/hooks/use-chat-context";
 
@@ -91,7 +91,7 @@ export function ChatInput({
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col rounded-lg border border-b-0 lg:max-w-3xl">
-      {isDragging && <ChatFileUpload />}
+      {isDragging && <FileUpload />}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

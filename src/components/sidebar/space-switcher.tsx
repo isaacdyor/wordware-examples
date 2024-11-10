@@ -1,7 +1,6 @@
 "use client";
 
-import * as React from "react";
-import { ChevronsUpDown, Plus } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -19,15 +18,33 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { api } from "@/trpc/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon, type IconName } from "../icon";
+import { NewSpaceButton } from "./new-space-button";
 
-export function TeamSwitcher() {
+export function SpaceSwitcher() {
   const { isMobile } = useSidebar();
   const { data: user } = api.users.getCurrent.useQuery();
   const [activeId, setActiveId] = useState(user?.activeSpaceId);
 
   const activeTeam = user?.spaces.find((space) => space.id === activeId);
+  const utils = api.useUtils();
+  const { mutate: updateActiveSpace } = api.users.updateActiveSpace.useMutation(
+    {
+      onSuccess: async () => {
+        await Promise.all([
+          utils.users.getCurrent.invalidate(),
+          utils.spaces.getCurrent.invalidate(),
+        ]);
+      },
+    },
+  );
+
+  useEffect(() => {
+    if (user?.activeSpaceId) {
+      setActiveId(user.activeSpaceId);
+    }
+  }, [user?.activeSpaceId]);
 
   if (!user) return null;
 
@@ -65,7 +82,10 @@ export function TeamSwitcher() {
             {user?.spaces.map((space, index) => (
               <DropdownMenuItem
                 key={space.id}
-                onClick={() => setActiveId(space.id)}
+                onClick={() => {
+                  setActiveId(space.id);
+                  updateActiveSpace({ spaceId: space.id });
+                }}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-sm border">
@@ -81,12 +101,7 @@ export function TeamSwitcher() {
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                <Plus className="size-4" />
-              </div>
-              <div className="font-medium text-muted-foreground">Add team</div>
-            </DropdownMenuItem>
+            <NewSpaceButton />
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
