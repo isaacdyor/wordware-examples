@@ -8,6 +8,7 @@ import { CheckCheck, SquarePen } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import Link from "next/link";
 
 export function ChatDetailTopbarContent({
   conversation,
@@ -89,9 +90,12 @@ export function ChatDetailTopbarContent({
         </div>
       </div>
 
-      <Button className="size-4 bg-transparent p-0 text-foreground hover:bg-transparent hover:text-muted-foreground">
-        <SquarePen className="size-5" />
-      </Button>
+      <Link
+        href="/chat"
+        className="size-4 bg-transparent p-0 text-foreground hover:bg-transparent hover:text-muted-foreground"
+      >
+        <SquarePen className="size-4" />
+      </Link>
     </>
   );
 }

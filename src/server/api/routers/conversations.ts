@@ -34,6 +34,14 @@ export const conversationsRouter = createTRPCRouter({
       return ctx.db.conversation.update(input);
     }),
 
+  delete: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.conversation.delete({
+        where: { id: input.id },
+      });
+    }),
+
   addMessage: privateProcedure
     .input(MessageCreateInputSchema)
     .mutation(async ({ ctx, input }) => {
