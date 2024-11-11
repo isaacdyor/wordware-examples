@@ -6,11 +6,12 @@ import { z } from "zod";
 
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { useChatContext } from "@/hooks/use-chat-context";
+import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { type Conversation } from "@prisma/client";
 import { FileUpload } from "./file-upload";
-import { cn } from "@/lib/utils";
-import { useChatContext } from "@/hooks/use-chat-context";
+import { InputActions } from "./input-actions";
 
 const FormSchema = z.object({
   message: z.string().min(1),
@@ -27,7 +28,7 @@ export function ChatInput({
     resolver: zodResolver(FormSchema),
   });
 
-  const { isDragging, setIsLoading } = useChatContext();
+  const { pageDragging, setIsLoading, isLoading } = useChatContext();
 
   const utils = api.useUtils();
 
@@ -67,9 +68,8 @@ export function ChatInput({
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    setTimeout(() => {
-      setIsLoading(true);
-    }, 400);
+    setIsLoading(true);
+
     form.reset({ message: "" });
     mutate({
       content: data.message,
@@ -93,10 +93,10 @@ export function ChatInput({
     <div
       className={cn(
         "mx-auto flex w-full max-w-2xl flex-col rounded-lg lg:max-w-3xl",
-        isDragging && "border border-b-0",
+        pageDragging && "border border-b-0",
       )}
     >
-      {isDragging && <FileUpload />}
+      {pageDragging && <FileUpload />}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -108,18 +108,22 @@ export function ChatInput({
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
-                  <AutosizeTextarea
-                    placeholder="Ask me anything..."
-                    minHeight={36}
-                    maxHeight={150}
-                    className={cn(
-                      "w-full resize-none",
-                      isDragging && "border-x-0",
-                    )}
-                    onKeyDown={handleKeyDown}
-                    autoFocus
-                    {...field}
-                  />
+                  <div className="relative">
+                    <AutosizeTextarea
+                      placeholder="Send a message..."
+                      minHeight={90}
+                      maxHeight={300}
+                      className={cn(
+                        "w-full resize-none bg-sidebar pr-16",
+                        pageDragging && "border-x-0",
+                      )}
+                      onKeyDown={handleKeyDown}
+                      autoFocus
+                      {...field}
+                    />
+
+                    <InputActions isLoading={isLoading} />
+                  </div>
                 </FormControl>
               </FormItem>
             )}

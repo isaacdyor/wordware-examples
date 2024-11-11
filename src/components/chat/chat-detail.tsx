@@ -3,7 +3,6 @@
 import { useChat } from "@/hooks/use-chat";
 import { useChatContext } from "@/hooks/use-chat-context";
 import { api } from "@/trpc/react";
-import { User } from "lucide-react";
 import { redirect, useParams } from "next/navigation";
 import { type DragEvent, useEffect, useRef } from "react";
 import { AssistantMessage } from "./assistant-message";
@@ -12,7 +11,7 @@ import { ChatInput } from "./chat-input";
 export function ChatDetail() {
   const params = useParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { isDragging, setIsDragging, countRef, isLoading, setIsLoading } =
+  const { setPageDragging, countRef, isLoading, setIsLoading } =
     useChatContext();
 
   const { data: conversation } = api.conversations.getById.useQuery({
@@ -47,7 +46,7 @@ export function ChatDetail() {
     e.stopPropagation();
     countRef.current++;
     if (countRef.current === 1) {
-      setIsDragging(true);
+      setPageDragging(true);
     }
   };
 
@@ -56,7 +55,7 @@ export function ChatDetail() {
     e.stopPropagation();
     countRef.current--;
     if (countRef.current === 0) {
-      setIsDragging(false);
+      setPageDragging(false);
     }
   };
 
@@ -64,7 +63,7 @@ export function ChatDetail() {
     e.preventDefault();
     e.stopPropagation();
     countRef.current = 0;
-    setIsDragging(false);
+    setPageDragging(false);
   };
 
   if (!conversation || conversation.messages.length === 0) redirect("/chat");

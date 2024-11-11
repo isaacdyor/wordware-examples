@@ -93,7 +93,7 @@ export function ChatDetailTopbar({ id }: { id: string }) {
 
       <Link
         href="/chat"
-        className="size-4 bg-transparent p-0 text-foreground hover:bg-transparent hover:text-muted-foreground"
+        className="invisible size-4 bg-transparent p-0 text-foreground hover:bg-transparent hover:text-muted-foreground"
       >
         <SquarePen className="size-4" />
       </Link>

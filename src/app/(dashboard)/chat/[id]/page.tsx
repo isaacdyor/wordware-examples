@@ -1,5 +1,5 @@
 import { ChatDetail } from "@/components/chat/chat-detail";
-import { ChatDetailTopbar } from "@/components/chat/chat-detail-topbar-content";
+import { ChatDetailTopbar } from "@/components/chat/chat-detail-topbar";
 import { Topbar } from "@/components/sidebar/topbar";
 import { ChatProvider } from "@/providers/chat-provider";
 import { api, HydrateClient } from "@/trpc/server";
