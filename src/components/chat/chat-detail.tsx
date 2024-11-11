@@ -19,6 +19,8 @@ export function ChatDetail() {
     id: params.id as string,
   });
 
+  console.log(conversation?.messages);
+
   const { streamedContent, streamLLM } = useStreamLLM({
     conversation,
   });

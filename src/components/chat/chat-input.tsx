@@ -13,6 +13,7 @@ import { type Conversation } from "@prisma/client";
 import { FileUpload } from "./file-upload";
 import { InputActions } from "./input-actions";
 import { useStreamLLM } from "@/hooks/use-stream-llm";
+import { toast } from "sonner";
 
 const FormSchema = z.object({
   message: z.string().min(1),
@@ -64,6 +65,10 @@ export function ChatInput({ conversation }: { conversation: Conversation }) {
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    if (isGenerating) {
+      toast.error("You are already generating a response");
+      return;
+    }
     form.reset({ message: "" });
     setIsGenerating(true);
     mutate({

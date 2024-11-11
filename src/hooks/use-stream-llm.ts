@@ -21,6 +21,7 @@ export function useStreamLLM({
   });
 
   const addMessage = useCallback(() => {
+    if (streamedContent.length === 0) return;
     mutate({
       content: streamedContent,
       role: "ASSISTANT",
