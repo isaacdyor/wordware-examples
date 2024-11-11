@@ -1,59 +1,25 @@
 import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
-import { z } from "node_modules/zod/lib";
 import { UserCreateInputSchema } from "prisma/generated/zod";
 
 export const usersRouter = createTRPCRouter({
   create: privateProcedure
     .input(UserCreateInputSchema)
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.$transaction(async (prisma) => {
-        // Create the user first
-        const user = await prisma.user.create({
-          data: input,
-        });
-
-        // Create the space and associate it with the user
-        const space = await prisma.space.create({
-          data: {
-            name: "Personal",
-            icon: "User",
-            userId: user.id,
-          },
-        });
-
-        // Update the user with the active space ID
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { activeSpaceId: space.id },
-        });
-
-        return { user, space };
+      return ctx.db.user.create({
+        data: input,
       });
     }),
 
   getCurrent: privateProcedure.query(async ({ ctx }) => {
     return ctx.db.user.findUnique({
-      where: { userId: ctx.user.id },
+      where: { id: ctx.user.id },
       include: {
-        spaces: {
-          include: {
-            conversations: {
-              orderBy: {
-                createdAt: "asc",
-              },
-            },
+        conversations: {
+          orderBy: {
+            updatedAt: "asc",
           },
         },
       },
     });
   }),
-
-  updateActiveSpace: privateProcedure
-    .input(z.object({ spaceId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      return ctx.db.user.update({
-        where: { userId: ctx.user.id },
-        data: { activeSpaceId: input.spaceId },
-      });
-    }),
 });

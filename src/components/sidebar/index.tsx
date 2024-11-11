@@ -3,45 +3,51 @@
 import * as React from "react";
 
 import { NavUser } from "@/components/sidebar/nav-user";
-import { SpaceSwitcher } from "@/components/sidebar/space-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
+  SidebarInset,
   SidebarMenuButton,
+  SidebarProvider,
   SidebarRail,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { NavMain } from "./nav-main";
 import { Logo } from "../logo";
+import { NavMain } from "./nav-main";
+import { useState } from "react";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ children }: { children: React.ReactNode }) {
+  const [isOpen, setIsOpen] = useState(true);
+
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <Logo className="fill-foreground" />
-        {/* <SpaceSwitcher /> */}
-      </SidebarHeader>
-      <SidebarGroup>
-        <Link href="/chat">
-          <SidebarMenuButton tooltip="Create Chat">
-            <Plus />
-            <span>Create Chat</span>
-          </SidebarMenuButton>
-        </Link>
-      </SidebarGroup>
-      <SidebarSeparator />
-      <SidebarContent>
-        <NavMain />
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser />
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
+    <SidebarProvider open={isOpen} onOpenChange={setIsOpen}>
+      <Sidebar collapsible="icon">
+        <SidebarHeader>
+          <Logo isClosed={!isOpen} className="ml-2 mt-0.5 fill-foreground" />
+        </SidebarHeader>
+        <SidebarGroup>
+          <Link href="/chat">
+            <SidebarMenuButton tooltip="Create Chat">
+              <Plus />
+              <span>Create Chat</span>
+            </SidebarMenuButton>
+          </Link>
+        </SidebarGroup>
+        <SidebarSeparator />
+        <SidebarContent>
+          <NavMain />
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+      <SidebarInset>{children}</SidebarInset>
+    </SidebarProvider>
   );
 }

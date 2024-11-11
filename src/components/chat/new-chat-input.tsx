@@ -20,7 +20,7 @@ const FormSchema = z.object({
 });
 
 export function NewChatInput() {
-  const { data: space } = api.spaces.getCurrent.useQuery();
+  const { data: user } = api.users.getCurrent.useQuery();
 
   const utils = api.useUtils();
 
@@ -32,17 +32,17 @@ export function NewChatInput() {
 
   const { mutate } = api.conversations.create.useMutation({
     onSuccess: (data: { id: string }) => {
-      void utils.spaces.getCurrent.invalidate();
+      void utils.users.getCurrent.invalidate();
       router.push(`/chat/${data.id}`);
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    if (!space) return;
+    if (!user) return;
     mutate({
       conversation: {
         name: "New Chat",
-        space: { connect: { id: space.id } },
+        user: { connect: { id: user.id } },
       },
       message: data.message,
     });

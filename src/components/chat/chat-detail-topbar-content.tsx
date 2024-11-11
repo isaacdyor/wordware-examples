@@ -24,7 +24,7 @@ export function ChatDetailTopbar({ id }: { id: string }) {
       setTimeout(() => {
         setSaved(false);
       }, 2000);
-      await utils.spaces.getCurrent.invalidate();
+      await utils.users.getCurrent.invalidate();
     },
   });
 
@@ -63,7 +63,7 @@ export function ChatDetailTopbar({ id }: { id: string }) {
   return (
     <>
       <div className="flex items-center">
-        <div className="relative">
+        <div className="relative pl-4">
           <span
             ref={measureRef}
             className="invisible absolute whitespace-pre py-0.5 pl-3 pr-1 text-sm"
@@ -76,7 +76,7 @@ export function ChatDetailTopbar({ id }: { id: string }) {
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="h-6 max-w-xl border-none text-center focus-visible:ring-0 sm:max-w-none"
+            className="h-6 max-w-xl border-none text-center shadow-none focus-visible:ring-0 sm:max-w-none"
             style={{ width: `${width}px` }}
           />
         </div>

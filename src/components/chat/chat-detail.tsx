@@ -80,13 +80,15 @@ export function ChatDetail() {
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-2 lg:max-w-3xl">
           {conversation.messages.map((message) =>
             message.role === "USER" ? (
-              <div key={message.id} className="flex items-start gap-2 pl-10">
-                <div className="ml-auto rounded-md bg-primary px-2 py-1 text-primary-foreground">
-                  <p className="break-words">{message.content}</p>
-                </div>
-                <div className="rounded-full bg-muted p-1.5">
-                  <User className="size-5 text-muted-foreground" />
-                </div>
+              <div
+                key={message.id}
+                className="ml-auto flex flex-col gap-2 rounded-xl bg-primary px-3 py-2 text-primary-foreground"
+              >
+                {message.content.split("\n").map((line, i) => (
+                  <p key={i} className="break-words">
+                    {line}
+                  </p>
+                ))}
               </div>
             ) : (
               <AssistantMessage key={message.id} message={message.content} />

@@ -40,7 +40,6 @@ export function RenameButton({ conversation }: { conversation: Conversation }) {
   const { mutate } = api.conversations.update.useMutation({
     onSuccess: async () => {
       await Promise.all([
-        utils.spaces.getCurrent.invalidate(),
         utils.conversations.getById.invalidate({ id: conversation.id }),
       ]);
       toast.success("Conversation renamed");
@@ -78,7 +77,7 @@ export function RenameButton({ conversation }: { conversation: Conversation }) {
           onClick={(e) => e.stopPropagation()}
         >
           <Pen className="size-4 shrink-0 text-muted-foreground" />
-          <span>Rename</span>
+          <span className="font-normal">Rename</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent

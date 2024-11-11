@@ -92,10 +92,7 @@ const MarkdownComponents = {
     />
   ),
   h2: ({ ...props }) => (
-    <h2
-      className="mb-4 mt-6 text-2xl font-semibold tracking-tight"
-      {...props}
-    />
+    <h2 className="mt-6 text-2xl font-semibold tracking-tight" {...props} />
   ),
   h3: ({ ...props }) => (
     <h3 className="mb-3 mt-5 text-xl font-semibold tracking-tight" {...props} />
@@ -113,13 +110,13 @@ const MarkdownComponents = {
     <h6 className="mb-2 mt-3 text-sm font-semibold tracking-tight" {...props} />
   ),
   p: ({ ...props }) => (
-    <p className="mb-4 leading-7 [&:not(:first-child)]:mt-4" {...props} />
+    <p className="leading-7 [&:not(:first-child)]:mt-4" {...props} />
   ),
   ul: ({ ...props }) => (
-    <ul className="mb-4 ml-6 list-disc [&>li]:mt-2" {...props} />
+    <ul className="ml-6 list-disc [&>li]:mt-2" {...props} />
   ),
   ol: ({ ...props }) => (
-    <ol className="mb-4 ml-6 list-decimal [&>li]:mt-2" {...props} />
+    <ol className="ml-6 list-decimal [&>li]:mt-2" {...props} />
   ),
   li: ({ ...props }) => <li className="leading-7" {...props} />,
   blockquote: ({ ...props }) => (

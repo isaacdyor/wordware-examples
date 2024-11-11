@@ -9,7 +9,7 @@ export function ArchiveButton({ id }: { id: string }) {
   const { mutate: archiveConversation } = api.conversations.archive.useMutation(
     {
       onSuccess: async () => {
-        await utils.spaces.getCurrent.invalidate();
+        await utils.users.getCurrent.invalidate();
         toast.success("Conversation archived");
       },
     },

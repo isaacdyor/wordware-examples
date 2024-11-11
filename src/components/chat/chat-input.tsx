@@ -90,7 +90,12 @@ export function ChatInput({
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col rounded-lg border border-b-0 lg:max-w-3xl">
+    <div
+      className={cn(
+        "mx-auto flex w-full max-w-2xl flex-col rounded-lg lg:max-w-3xl",
+        isDragging && "border border-b-0",
+      )}
+    >
       {isDragging && <FileUpload />}
       <Form {...form}>
         <form

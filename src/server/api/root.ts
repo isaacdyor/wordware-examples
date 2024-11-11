@@ -1,6 +1,5 @@
 import { conversationsRouter } from "@/server/api/routers/conversations";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
-import { spacesRouter } from "./routers/spaces";
 import { usersRouter } from "./routers/users";
 
 /**
@@ -10,7 +9,6 @@ import { usersRouter } from "./routers/users";
  */
 export const appRouter = createTRPCRouter({
   users: usersRouter,
-  spaces: spacesRouter,
   conversations: conversationsRouter,
 });
 

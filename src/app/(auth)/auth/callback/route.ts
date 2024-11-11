@@ -20,11 +20,10 @@ export async function GET(request: NextRequest) {
 
       if (!existingUser) {
         await api.users.create({
+          id: data.user.id,
           email: data.user.email,
-          userId: data.user.id,
           name: data.user.user_metadata.full_name as string,
           image: data.user.user_metadata.avatar_url as string,
-          activeSpaceId: "",
         });
       }
 

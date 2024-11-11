@@ -24,7 +24,7 @@ export function DeleteButton({ id }: { id: string }) {
 
   const { mutate: deleteConversation } = api.conversations.delete.useMutation({
     onSuccess: async () => {
-      await utils.spaces.getCurrent.invalidate();
+      await utils.users.getCurrent.invalidate();
       toast.success("Conversation deleted");
       setIsDeleting(false);
       setIsOpen(false);
@@ -35,7 +35,7 @@ export function DeleteButton({ id }: { id: string }) {
       <AlertDialogTrigger asChild>
         <Button
           variant="ghost"
-          className="flex h-8 w-full justify-start gap-2 px-2 py-1.5 text-destructive hover:text-destructive"
+          className="flex h-8 w-full justify-start gap-2 px-2 py-1.5 text-destructive hover:bg-destructive/20 hover:text-destructive"
         >
           <Trash2 className="size-4 shrink-0" />
           <span>Delete Project</span>
