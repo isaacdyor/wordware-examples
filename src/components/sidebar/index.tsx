@@ -34,7 +34,9 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
             isOpen && "pt-4",
           )}
         >
-          <Logo isClosed={!isOpen} className="ml-2 mt-0.5 fill-foreground" />
+          <Link href="/">
+            <Logo isClosed={!isOpen} className="ml-2 mt-0.5 fill-foreground" />
+          </Link>
         </SidebarHeader>
         <SidebarGroup>
           <Link href="/chat">

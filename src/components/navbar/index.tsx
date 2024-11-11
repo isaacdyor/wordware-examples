@@ -24,10 +24,7 @@ export function Navbar() {
     <div className="absolute top-0 z-40 w-full bg-transparent px-4 lg:px-24 xl:px-36">
       <div className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 overflow-hidden text-2xl font-semibold tracking-tighter text-foreground"
-          >
+          <Link href="/" className="pb-1.5">
             <Logo />
           </Link>
           <NavigationMenu className="hidden md:flex">
