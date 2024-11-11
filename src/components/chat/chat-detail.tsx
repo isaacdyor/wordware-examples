@@ -30,11 +30,12 @@ export function ChatDetail() {
   }, [conversation?.messages, streamedContent]);
 
   useEffect(() => {
-    if (conversation?.messages.length === 1) {
+    if (
+      conversation?.messages.length === 1 &&
+      conversation?.messages[0]?.content
+    ) {
       setIsGenerating(true);
-      void streamLLM("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
-        message: conversation?.messages[0]?.content,
-      });
+      void streamLLM(conversation?.messages[0]?.content);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

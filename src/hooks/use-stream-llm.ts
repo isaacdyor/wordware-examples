@@ -34,17 +34,22 @@ export function useStreamLLM({
   }, [mutate, streamedContent, conversation?.id]);
 
   const streamLLM = useCallback(
-    async (appSlug: string, inputs: Record<string, unknown>) => {
+    async (message: string) => {
       try {
-        const response = await fetch(`/api/stream/${appSlug}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetch(
+          "/api/stream/4cfc2a23-2a4e-4038-a452-ac74c1faaa82",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              inputs: {
+                message: message,
+              },
+            }),
           },
-          body: JSON.stringify({
-            inputs: inputs,
-          }),
-        });
+        );
 
         if (!response.ok || !response.body) {
           throw new Error(`HTTP error! status: ${response.status}`);

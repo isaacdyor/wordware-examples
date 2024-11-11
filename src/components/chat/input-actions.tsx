@@ -1,9 +1,11 @@
+import { useChatContext } from "@/hooks/use-chat-context";
 import { useUpload } from "@/hooks/use-upload";
 import { ArrowUp, Paperclip, StopCircle } from "lucide-react";
 import { useRef } from "react";
 import { Button } from "../ui/button";
 
-export function InputActions({ isGenerating }: { isGenerating: boolean }) {
+export function InputActions() {
+  const { isGenerating } = useChatContext();
   const { handleUpload } = useUpload();
   const fileInputRef = useRef<HTMLInputElement>(null);
 

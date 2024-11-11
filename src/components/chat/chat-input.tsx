@@ -58,9 +58,7 @@ export function ChatInput({ conversation }: { conversation: Conversation }) {
       return { prevData };
     },
     onSuccess: async (data: { content: string }) => {
-      await streamLLM("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
-        message: data.content,
-      });
+      await streamLLM(data.content);
     },
   });
 
@@ -117,7 +115,7 @@ export function ChatInput({ conversation }: { conversation: Conversation }) {
                       {...field}
                     />
 
-                    <InputActions isGenerating={isGenerating} />
+                    <InputActions />
                   </div>
                 </FormControl>
               </FormItem>
