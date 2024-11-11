@@ -12,8 +12,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   message: z.string().min(1),

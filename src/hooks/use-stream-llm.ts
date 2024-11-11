@@ -1,12 +1,14 @@
 import { api } from "@/trpc/react";
 import { type Conversation } from "@prisma/client";
 import { useCallback, useState } from "react";
+import { useChatContext } from "./use-chat-context";
 
-export function useStream({
+export function useStreamLLM({
   conversation,
 }: {
   conversation: Conversation | undefined | null;
 }) {
+  const { setIsGenerating } = useChatContext();
   const [streamedContent, setStreamedContent] = useState<string>("");
 
   const utils = api.useUtils();
@@ -30,7 +32,7 @@ export function useStream({
     });
   }, [mutate, streamedContent, conversation?.id]);
 
-  const fetchStream = useCallback(
+  const streamLLM = useCallback(
     async (appSlug: string, inputs: Record<string, unknown>) => {
       try {
         const response = await fetch(`/api/stream/${appSlug}`, {
@@ -53,6 +55,7 @@ export function useStream({
         while (true) {
           const { value, done } = await reader.read();
           if (done) {
+            setIsGenerating(false);
             addMessage();
             break;
           }
@@ -86,11 +89,11 @@ export function useStream({
         console.error("Failed to generate AI response:", error);
       }
     },
-    [addMessage],
+    [addMessage, setIsGenerating],
   );
 
   return {
-    fetchStream,
+    streamLLM,
     streamedContent,
   };
 }

@@ -1,23 +1,25 @@
 "use client";
 
-import { useStream } from "@/hooks/use-stream";
 import { useChatContext } from "@/hooks/use-chat-context";
+import { useStreamLLM } from "@/hooks/use-stream-llm";
 import { api } from "@/trpc/react";
 import { redirect, useParams } from "next/navigation";
 import { type DragEvent, useEffect, useRef } from "react";
 import { AssistantMessage } from "./assistant-message";
 import { ChatInput } from "./chat-input";
+import { motion } from "framer-motion";
 
 export function ChatDetail() {
   const params = useParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { setPageDragging, countRef, setIsGenerating } = useChatContext();
+  const { setPageDragging, countRef, isGenerating, setIsGenerating } =
+    useChatContext();
 
   const { data: conversation } = api.conversations.getById.useQuery({
     id: params.id as string,
   });
 
-  const { streamedContent, fetchStream } = useStream({
+  const { streamedContent, streamLLM } = useStreamLLM({
     conversation,
   });
 
@@ -29,12 +31,10 @@ export function ChatDetail() {
 
   useEffect(() => {
     if (conversation?.messages.length === 1) {
-      void fetchStream("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
+      setIsGenerating(true);
+      void streamLLM("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
         message: conversation?.messages[0]?.content,
       });
-      setTimeout(() => {
-        setIsGenerating(true);
-      }, 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -79,20 +79,29 @@ export function ChatDetail() {
           <div className="flex w-full flex-col gap-2 lg:max-w-3xl">
             {conversation.messages.map((message) =>
               message.role === "USER" ? (
-                <div
+                <motion.div
                   key={message.id}
                   className="ml-auto flex flex-col gap-2 rounded-xl bg-primary px-3 py-2 text-primary-foreground"
+                  initial={{ y: 5, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  data-role={message.role}
                 >
                   {message.content.split("\n").map((line, i) => (
                     <p key={i} className="break-words">
                       {line}
                     </p>
                   ))}
-                </div>
+                </motion.div>
               ) : (
                 <AssistantMessage key={message.id} message={message.content} />
               ),
             )}
+            {isGenerating ? (
+              <AssistantMessage message="Thinking..." />
+            ) : (
+              <AssistantMessage message={streamedContent} />
+            )}
+
             <div ref={messagesEndRef} />
           </div>
         </div>

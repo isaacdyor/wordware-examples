@@ -77,7 +77,7 @@ export function ChatDetailTopbar({ id }: { id: string }) {
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="h-6 max-w-xl border-none text-center shadow-none focus-visible:ring-0 sm:max-w-none"
+            className="h-6 max-w-xl border-none text-center font-medium shadow-none focus-visible:ring-0 sm:max-w-none"
             style={{ width: `${width}px` }}
           />
         </div>

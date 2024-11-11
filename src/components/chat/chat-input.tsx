@@ -12,21 +12,21 @@ import { api } from "@/trpc/react";
 import { type Conversation } from "@prisma/client";
 import { FileUpload } from "./file-upload";
 import { InputActions } from "./input-actions";
-import { useStream } from "@/hooks/use-stream";
+import { useStreamLLM } from "@/hooks/use-stream-llm";
 
 const FormSchema = z.object({
   message: z.string().min(1),
 });
 
 export function ChatInput({ conversation }: { conversation: Conversation }) {
-  const { fetchStream } = useStream({ conversation });
+  const { streamLLM } = useStreamLLM({ conversation });
+  const { setIsGenerating } = useChatContext();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  const { pageDragging, setIsGenerating, isGenerating, files } =
-    useChatContext();
+  const { pageDragging, isGenerating, files } = useChatContext();
 
   const utils = api.useUtils();
 
@@ -57,18 +57,15 @@ export function ChatInput({ conversation }: { conversation: Conversation }) {
       return { prevData };
     },
     onSuccess: async (data: { content: string }) => {
-      void utils.conversations.invalidate();
-      await fetchStream("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
+      await streamLLM("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
         message: data.content,
       });
-      setIsGenerating(false);
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    setIsGenerating(true);
-
     form.reset({ message: "" });
+    setIsGenerating(true);
     mutate({
       content: data.message,
       role: "USER",
