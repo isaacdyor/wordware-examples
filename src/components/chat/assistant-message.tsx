@@ -1,15 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Bot, CopyIcon, ThumbsDown, ThumbsUp } from "lucide-react";
-import { MarkdownRenderer } from "../markdown-renderer";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Bot, CopyIcon, ThumbsDown, ThumbsUp } from "lucide-react";
 import { toast } from "sonner";
+import { MarkdownRenderer } from "../markdown-renderer";
 import { Button } from "../ui/button";
 
 export function AssistantMessage({ message }: { message: string }) {
