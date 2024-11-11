@@ -16,7 +16,7 @@ export const usersRouter = createTRPCRouter({
       include: {
         conversations: {
           orderBy: {
-            updatedAt: "asc",
+            updatedAt: "desc",
           },
         },
       },

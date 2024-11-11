@@ -11,6 +11,7 @@ import { Input } from "../ui/input";
 export function ChatDetailTopbar({ id }: { id: string }) {
   const conversation = api.conversations.getById.useQuery({ id });
   const [title, setTitle] = useState(conversation.data?.name ?? "");
+  const initialTitle = useRef(conversation.data?.name ?? "");
   const [width, setWidth] = useState(500);
   const [saved, setSaved] = useState(false);
   const measureRef = useRef<HTMLSpanElement>(null);
@@ -28,23 +29,23 @@ export function ChatDetailTopbar({ id }: { id: string }) {
     },
   });
 
-  const isFirstRender = useRef(true);
-
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
+    console.log("useEffect");
 
-    mutate({
-      where: {
-        id,
-      },
-      data: {
-        name: debouncedTitle,
-      },
-    });
-  }, [id, debouncedTitle, mutate]);
+    if (
+      debouncedTitle !== initialTitle.current &&
+      conversation.data?.name !== undefined
+    ) {
+      mutate({
+        where: {
+          id,
+        },
+        data: {
+          name: debouncedTitle,
+        },
+      });
+    }
+  }, [debouncedTitle, conversation.data?.name, id, mutate]);
 
   useEffect(() => {
     if (measureRef.current) {
