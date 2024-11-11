@@ -2,14 +2,19 @@
 
 import React, { createContext, useRef, useState } from "react";
 
+export interface File {
+  name: string;
+  url: string;
+}
+
 interface ChatContextType {
   pageDragging: boolean;
   setPageDragging: React.Dispatch<React.SetStateAction<boolean>>;
   countRef: React.MutableRefObject<number>;
-  isLoading: boolean;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  files: string[];
-  setFiles: React.Dispatch<React.SetStateAction<string[]>>;
+  isGenerating: boolean;
+  setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>;
+  files: File[];
+  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
 export const ChatContext = createContext<ChatContextType | undefined>(
@@ -19,10 +24,10 @@ export const ChatContext = createContext<ChatContextType | undefined>(
 export const ChatProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [pageDragging, setPageDragging] = useState<boolean>(false);
+  const [pageDragging, setPageDragging] = useState<boolean>(true);
   const countRef = useRef<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [files, setFiles] = useState<string[]>([]);
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [files, setFiles] = useState<File[]>([]);
 
   return (
     <ChatContext.Provider
@@ -30,8 +35,8 @@ export const ChatProvider: React.FC<{
         pageDragging,
         setPageDragging,
         countRef,
-        isLoading,
-        setIsLoading,
+        isGenerating,
+        setIsGenerating,
         files,
         setFiles,
       }}

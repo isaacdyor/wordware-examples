@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { type PutBlobResult } from "@vercel/blob";
 import { useChatContext } from "./use-chat-context";
+import { toast } from "sonner";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
 export function useUpload() {
   const [uploading, setUploading] = useState(false);
-  const { setFiles, setPageDragging } = useChatContext();
+  const { setFiles, setPageDragging, files } = useChatContext();
 
-  const handleImageUrl = (url: string) => {
-    setFiles((prevFiles) => [...prevFiles, url]);
+  const handleImageUrl = (url: string, name: string) => {
+    setFiles((prevFiles) => [...prevFiles, { url, name }]);
     setPageDragging(false);
   };
 
@@ -17,7 +18,12 @@ export function useUpload() {
     if (!file) return;
 
     if (file.size > MAX_FILE_SIZE) {
-      console.error("File size too big (max 50MB)");
+      toast.error("File size too big (max 50MB)");
+      return;
+    }
+
+    if (files.length >= 5) {
+      toast.error("You can only upload 5 files at a time.");
       return;
     }
 
@@ -31,8 +37,8 @@ export function useUpload() {
 
       if (response.ok) {
         const { url } = (await response.json()) as PutBlobResult;
-        handleImageUrl(url);
-        console.log(url);
+
+        handleImageUrl(url, file.name);
       } else {
         const error = await response.text();
         console.error(error);

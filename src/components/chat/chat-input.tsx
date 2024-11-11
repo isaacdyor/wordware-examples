@@ -12,23 +12,21 @@ import { api } from "@/trpc/react";
 import { type Conversation } from "@prisma/client";
 import { FileUpload } from "./file-upload";
 import { InputActions } from "./input-actions";
+import { useStream } from "@/hooks/use-stream";
 
 const FormSchema = z.object({
   message: z.string().min(1),
 });
 
-export function ChatInput({
-  conversation,
-  fetchStream,
-}: {
-  conversation: Conversation;
-  fetchStream: (id: string, data: { message: string }) => Promise<void>;
-}) {
+export function ChatInput({ conversation }: { conversation: Conversation }) {
+  const { fetchStream } = useStream({ conversation });
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  const { pageDragging, setIsLoading, isLoading } = useChatContext();
+  const { pageDragging, setIsGenerating, isGenerating, files } =
+    useChatContext();
 
   const utils = api.useUtils();
 
@@ -63,12 +61,12 @@ export function ChatInput({
       await fetchStream("4cfc2a23-2a4e-4038-a452-ac74c1faaa82", {
         message: data.content,
       });
-      setIsLoading(false);
+      setIsGenerating(false);
     },
   });
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    setIsLoading(true);
+    setIsGenerating(true);
 
     form.reset({ message: "" });
     mutate({
@@ -90,13 +88,8 @@ export function ChatInput({
   };
 
   return (
-    <div
-      className={cn(
-        "mx-auto flex w-full max-w-2xl flex-col rounded-lg lg:max-w-3xl",
-        pageDragging && "border border-b-0",
-      )}
-    >
-      {pageDragging && <FileUpload />}
+    <div>
+      <FileUpload />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -115,14 +108,14 @@ export function ChatInput({
                       maxHeight={300}
                       className={cn(
                         "w-full resize-none bg-sidebar pr-16",
-                        pageDragging && "border-x-0",
+                        (pageDragging || files.length > 0) && "rounded-t-none",
                       )}
                       onKeyDown={handleKeyDown}
                       autoFocus
                       {...field}
                     />
 
-                    <InputActions isLoading={isLoading} />
+                    <InputActions isGenerating={isGenerating} />
                   </div>
                 </FormControl>
               </FormItem>

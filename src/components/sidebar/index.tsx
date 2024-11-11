@@ -27,7 +27,7 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider open={isOpen} onOpenChange={setIsOpen}>
       <Sidebar collapsible="icon">
-        <SidebarHeader>
+        <SidebarHeader className="pb-6">
           <Logo isClosed={!isOpen} className="ml-2 mt-0.5 fill-foreground" />
         </SidebarHeader>
         <SidebarGroup>

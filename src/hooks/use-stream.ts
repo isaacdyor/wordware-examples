@@ -1,8 +1,34 @@
-import { useState, useCallback } from "react";
+import { api } from "@/trpc/react";
+import { type Conversation } from "@prisma/client";
+import { useCallback, useState } from "react";
 
-export function useStream() {
+export function useStream({
+  conversation,
+}: {
+  conversation: Conversation | undefined | null;
+}) {
   const [streamedContent, setStreamedContent] = useState<string>("");
-  const [isCompleted, setIsCompleted] = useState(false);
+
+  const utils = api.useUtils();
+
+  const { mutate } = api.conversations.addMessage.useMutation({
+    onSuccess: async () => {
+      await utils.conversations.getById.invalidate();
+      setStreamedContent("");
+    },
+  });
+
+  const addMessage = useCallback(() => {
+    mutate({
+      content: streamedContent,
+      role: "ASSISTANT",
+      conversation: {
+        connect: {
+          id: conversation?.id,
+        },
+      },
+    });
+  }, [mutate, streamedContent, conversation?.id]);
 
   const fetchStream = useCallback(
     async (appSlug: string, inputs: Record<string, unknown>) => {
@@ -27,7 +53,7 @@ export function useStream() {
         while (true) {
           const { value, done } = await reader.read();
           if (done) {
-            setIsCompleted(true);
+            addMessage();
             break;
           }
 
@@ -60,13 +86,11 @@ export function useStream() {
         console.error("Failed to generate AI response:", error);
       }
     },
-    [],
+    [addMessage],
   );
 
   return {
     fetchStream,
     streamedContent,
-    setStreamedContent,
-    isCompleted,
   };
 }
