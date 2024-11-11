@@ -20,6 +20,7 @@ import Link from "next/link";
 import { Logo } from "../logo";
 import { NavMain } from "./nav-main";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export function AppSidebar({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(true);
@@ -27,7 +28,12 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider open={isOpen} onOpenChange={setIsOpen}>
       <Sidebar collapsible="icon">
-        <SidebarHeader className="pb-6">
+        <SidebarHeader
+          className={cn(
+            "pb-6 transition-[padding] duration-200",
+            isOpen && "pt-4",
+          )}
+        >
           <Logo isClosed={!isOpen} className="ml-2 mt-0.5 fill-foreground" />
         </SidebarHeader>
         <SidebarGroup>

@@ -19,8 +19,6 @@ export function ChatDetail() {
     id: params.id as string,
   });
 
-  console.log(conversation?.messages);
-
   const { streamedContent, streamLLM } = useStreamLLM({
     conversation,
   });
@@ -78,7 +76,7 @@ export function ChatDetail() {
     >
       <div className="mx-auto flex h-full max-w-2xl flex-col justify-between gap-4">
         <div className="no-scrollbar flex flex-col-reverse overflow-auto pb-4">
-          <div className="flex w-full flex-col gap-2 lg:max-w-3xl">
+          <div className="flex w-full flex-col gap-4 lg:max-w-3xl">
             {conversation.messages.map((message) =>
               message.role === "USER" ? (
                 <motion.div
@@ -89,7 +87,7 @@ export function ChatDetail() {
                   data-role={message.role}
                 >
                   {message.content.split("\n").map((line, i) => (
-                    <p key={i} className="break-words">
+                    <p key={i} className="whitespace-pre-wrap break-words">
                       {line}
                     </p>
                   ))}

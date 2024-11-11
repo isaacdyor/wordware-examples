@@ -19,7 +19,12 @@ export function FileUpload() {
   const showFileUpload = pageDragging || files.length > 0;
 
   return (
-    showFileUpload && (
+    <div
+      className={cn(
+        "overflow-hidden transition-[height,opacity] duration-200 ease-in-out",
+        showFileUpload ? "h-40 opacity-100" : "h-0 opacity-0",
+      )}
+    >
       <div className="h-40 rounded-t-md border border-b-0 bg-sidebar">
         {pageDragging ? (
           <div className="relative h-full">
@@ -107,6 +112,6 @@ export function FileUpload() {
           </div>
         )}
       </div>
-    )
+    </div>
   );
 }

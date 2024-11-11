@@ -23,7 +23,6 @@ export default function TrialPage() {
         <Button
           onClick={(e) => {
             e.stopPropagation();
-            console.log("bang");
           }}
           className="text-destructive focus:text-destructive"
         >

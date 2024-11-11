@@ -54,8 +54,17 @@ export const conversationsRouter = createTRPCRouter({
   addMessage: privateProcedure
     .input(MessageCreateInputSchema)
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.message.create({
-        data: input,
+      return await ctx.db.$transaction(async (tx) => {
+        const message = await tx.message.create({
+          data: input,
+        });
+
+        await tx.conversation.update({
+          where: { id: input.conversation.connect?.id },
+          data: { updatedAt: new Date() },
+        });
+
+        return message;
       });
     }),
 

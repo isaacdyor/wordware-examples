@@ -30,8 +30,6 @@ export function ChatDetailTopbar({ id }: { id: string }) {
   });
 
   useEffect(() => {
-    console.log("useEffect");
-
     if (
       debouncedTitle !== initialTitle.current &&
       conversation.data?.name !== undefined
